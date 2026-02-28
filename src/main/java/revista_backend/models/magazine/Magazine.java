@@ -38,6 +38,9 @@ public class Magazine {
     @Column(name = "permitir_reacciones")
     private boolean allowReactions;
 
+    @Column(name = "revista_activa")
+    private boolean activeMagazine;
+
     @Column(name = "costo_dia")
     private int dailyCost;
 

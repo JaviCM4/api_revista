@@ -10,6 +10,7 @@ import revista_backend.models.types.SexType;
 import revista_backend.models.types.UserType;
 
 import java.time.LocalDate;
+import revista_backend.dto.user.UserUpdateRequest;
 
 @Entity
 @Table(name = "usuario")
@@ -58,4 +59,12 @@ public class User {
 
     @Column(name = "dinero_disponible")
     private int availableMoney;
+    
+    public void updateEntity(UserUpdateRequest dto) {
+        this.names = dto.getNames();
+        this.lastNames = dto.getLastNames();
+        this.dateOfBirth = dto.getDateOfBirth();
+        this.photography = dto.getPhotography();
+        this.description = dto.getDescription();
+    }
 }
