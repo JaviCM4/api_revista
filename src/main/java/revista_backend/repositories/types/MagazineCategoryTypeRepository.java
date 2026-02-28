@@ -6,4 +6,5 @@ import revista_backend.models.types.MagazineCategoryType;
 
 @Repository
 public interface MagazineCategoryTypeRepository extends JpaRepository<MagazineCategoryType, Integer> {
+
 }

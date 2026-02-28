@@ -7,4 +7,5 @@ import revista_backend.models.user.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    boolean existsById(int id);
 }
