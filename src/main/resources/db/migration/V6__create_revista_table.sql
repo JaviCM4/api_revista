@@ -6,6 +6,7 @@ CREATE TABLE revista (
     permitir_suscripcion BOOLEAN NOT NULL ,
     permitir_comentarios BOOLEAN NOT NULL ,
     permitir_reacciones BOOLEAN NOT NULL ,
+    revista_activa BOOLEAN NOT NULL,
     costo_dia INT NOT NULL,
     costo_bloqueo_anuncio INT NOT NULL,
     fecha_creacion DATETIME NOT NULL,

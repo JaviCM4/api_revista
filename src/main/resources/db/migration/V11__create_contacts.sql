@@ -1,0 +1,15 @@
+CREATE TABLE tipo_contacto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE contacto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo_contacto_id INT NOT NULL,
+    detalle VARCHAR(255) NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (tipo_contacto_id) REFERENCES tipo_contacto(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
