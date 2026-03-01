@@ -3,7 +3,6 @@ CREATE TABLE anuncio (
     usuario_id INT NOT NULL,
     tipo_anuncio_id INT NOT NULL,
     estado_anuncio_id INT NOT NULL,
-    contenido TEXT NOT NULL,
     costo_total INT NOT NULL,
     fecha_creacion DATETIME NOT NULL,
     fecha_vencimiento DATETIME NOT NULL,

@@ -42,20 +42,12 @@ INSERT INTO tipo_anuncio (nombre) VALUES
 
 INSERT INTO estado_anuncio (nombre) VALUES
     ('Activo'),
-    ('Inactivo'),
-    ('Expirado'),
-    ('Pendiente de aprobación');
+    ('Expirado');
 
 INSERT INTO estado_bloqueo_anuncio (nombre) VALUES
     ('Activo'),
     ('Expirado'),
     ('Cancelado');
-
-INSERT INTO tipo_costo (nombre) VALUES
-    ('1 día'),
-    ('3 días'),
-    ('1 semana'),
-    ('2 semanas');
 
 INSERT INTO tipo_contacto (nombre) VALUES
     ('Correo electrónico'),
@@ -291,29 +283,34 @@ INSERT INTO pago_revista (revista_id, pago, fecha_pago) VALUES
     (9,  310, '2025-04-01 00:00:00'),
     (10, 255, '2025-08-01 00:00:00');
 
-INSERT INTO costo_sugerido (tipo_costo_id, costo, dias) VALUES
-    (1, 10,  1),
-    (2, 25,  3),
-    (3, 50,  7),
-    (4, 85,  14);
+INSERT INTO costo_sugerido (costo, dias) VALUES
+    ( 10,  1),
+    ( 25,  3),
+    ( 50,  7),
+    ( 85,  14);
 
 
-INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, contenido, costo_total, fecha_creacion, fecha_vencimiento) VALUES
-    (13, 1, 1, '¡Visita TechStore GT! Los mejores precios en laptops y accesorios. techstoreguatemala.com',             25, '2026-02-01 08:00:00', '2026-02-08 08:00:00'),
-    (13, 2, 1, 'iPhone 16 Pro ya disponible en TechStore GT. ¡No te lo pierdas!',                                      50, '2026-02-01 08:00:00', '2026-02-15 08:00:00'),
-    (13, 3, 2, 'https://youtube.com/watch?v=techstore-promo-2026',                                                      85, '2026-01-01 08:00:00', '2026-01-08 08:00:00'),
-    (14, 2, 1, 'Nueva colección Primavera 2026 en Boutique Gabriela. ¡Estilos únicos para cada ocasión!',              50, '2026-02-05 10:00:00', '2026-02-12 10:00:00'),
-    (14, 1, 3, 'Descuentos de hasta 50% en Boutique Gabriela. Solo por tiempo limitado.',                              10, '2026-01-15 10:00:00', '2026-01-16 10:00:00'),
-    (15, 3, 1, 'https://youtube.com/watch?v=marketing-digital-gt-2026',                                                85, '2026-02-10 09:00:00', '2026-02-17 09:00:00'),
-    (15, 2, 1, '¿Tu empresa necesita presencia digital? Contacta a Ricardo Solano Marketing y multiplica tus ventas.', 50, '2026-02-10 09:00:00', '2026-02-24 09:00:00'),
-    (13, 1, 1, 'Garantía extendida gratis en todos los productos de TechStore GT durante febrero.',                    25, '2026-02-01 08:00:00', '2026-02-08 08:00:00'),
-    (14, 3, 1, 'https://youtube.com/watch?v=boutique-gabriela-spring2026',                                             85, '2026-02-05 10:00:00', '2026-02-19 10:00:00'),
-    (15, 1, 2, 'Webinar GRATIS: Cómo crear tu estrategia digital en 2026. Regístrate en ricardosolanomarketing.com',  10, '2026-01-20 09:00:00', '2026-01-21 09:00:00');
+INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, costo_total, fecha_creacion, fecha_vencimiento) VALUES
+    (13, 1, 1, 25, '2026-02-01 08:00:00', '2026-02-08 08:00:00'),
+    (13, 2, 1, 50, '2026-02-01 08:00:00', '2026-02-15 08:00:00'),
+    (13, 3, 2, 85, '2026-01-01 08:00:00', '2026-01-08 08:00:00'),
+    (14, 2, 1, 50, '2026-02-05 10:00:00', '2026-02-12 10:00:00'),
+    (14, 1, 2, 10, '2026-01-15 10:00:00', '2026-01-16 10:00:00'),
+    (15, 3, 1, 85, '2026-02-10 09:00:00', '2026-02-17 09:00:00'),
+    (15, 2, 1, 50, '2026-02-10 09:00:00', '2026-02-24 09:00:00'),
+    (13, 1, 1, 25, '2026-02-01 08:00:00', '2026-02-08 08:00:00'),
+    (14, 3, 1, 85, '2026-02-05 10:00:00', '2026-02-19 10:00:00'),
+    (15, 1, 2, 10, '2026-01-20 09:00:00', '2026-01-21 09:00:00');
 
 INSERT INTO contenido_extra (anuncio_id, recurso) VALUES
+    (1, 'https://storage.revistas.gt/anuncios/techstore-iphone16.jpg'),
     (2, 'https://storage.revistas.gt/anuncios/techstore-iphone16.jpg'),
-    (4, 'https://storage.revistas.gt/anuncios/boutique-primavera2026.jpg'),
-    (7, 'https://storage.revistas.gt/anuncios/ricardosolano-banner.jpg'),
+    (3, 'https://storage.revistas.gt/anuncios/techstore-iphone16.jpg'),
+    (4, 'https://storage.revistas.gt/anuncios/techstore-iphone16.jpg'),
+    (5, 'https://storage.revistas.gt/anuncios/boutique-primavera2026.jpg'),
+    (6, 'https://storage.revistas.gt/anuncios/ricardosolano-banner.jpg'),
+    (7, 'https://storage.revistas.gt/anuncios/boutique-spring-video-thumb.jpg'),
+    (8, 'https://storage.revistas.gt/anuncios/boutique-spring-video-thumb.jpg'),
     (9, 'https://storage.revistas.gt/anuncios/boutique-spring-video-thumb.jpg');
 
 INSERT INTO bloqueo_anuncio (revista_id, anuncio_id, estado_bloqueo_anuncio_id, pago, fecha_inicio_bloqueo, fecha_fin_bloqueo) VALUES

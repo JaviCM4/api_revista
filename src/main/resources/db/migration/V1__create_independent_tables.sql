@@ -37,8 +37,3 @@ CREATE TABLE estado_bloqueo_anuncio (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB;
-
-CREATE TABLE tipo_costo (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL
-) ENGINE=InnoDB;
