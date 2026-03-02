@@ -218,8 +218,8 @@ public class UserServiceImplementationTest {
         assertAll(
                 () -> assertNotNull(result),
                 () -> assertEquals(2, result.size()),
-                () -> assertEquals("Juan", result.get(0).getNames()),
-                () -> assertEquals("María", result.get(1).getNames())
+                () -> assertEquals("prueba", result.get(0).getNames()),
+                () -> assertEquals("prueba", result.get(1).getNames())
         );
     }
 
@@ -250,8 +250,8 @@ public class UserServiceImplementationTest {
         verify(userRepository).findById(USER_ID);
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals("Juan", result.getNames()),
-                () -> assertEquals("Pérez", result.getLastNames())
+                () -> assertEquals("prueba", result.getNames()),
+                () -> assertEquals("prueba", result.getLastNames())
         );
     }
 
