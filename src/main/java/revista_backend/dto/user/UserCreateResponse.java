@@ -3,9 +3,9 @@ package revista_backend.dto.user;
 import lombok.Value;
 
 @Value
-public class UserResponse {
+public class UserCreateResponse {
 
-    int id;
+    Integer id;
     String names;
     String Lastnames;
 }

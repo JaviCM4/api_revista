@@ -3,7 +3,6 @@ package revista_backend.dto.user;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.*;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 
 @Value

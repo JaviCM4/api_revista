@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class CredentialResponse {
-
-    int id;
+    Integer id;
     String username;
+    boolean activeVerification;
 }

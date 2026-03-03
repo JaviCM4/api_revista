@@ -46,6 +46,14 @@ public class UserCreateRequest {
     @Size(max = 500)
     String description;
 
+    @NotNull
+    @Min(1)
+    Integer phone;
+
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "Formato de email inválido")
+    String email;
+
     @NotBlank 
     @Size(min = 8, max = 100)
     @Pattern(

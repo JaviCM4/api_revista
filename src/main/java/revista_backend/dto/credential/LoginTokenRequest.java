@@ -5,13 +5,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Value;
 
 @Value
-public class CredentialResquest {
+public class LoginTokenRequest {
 
     @NotBlank
-    @Size(max = 75)
-    String username;
-
-    @NotBlank
-    @Size(max = 75)
-    String password;
+    @Size(max = 150)
+    String tokenVerification;
 }

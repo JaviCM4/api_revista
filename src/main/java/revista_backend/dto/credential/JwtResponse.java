@@ -5,6 +5,6 @@ import lombok.Value;
 @Value
 public class JwtResponse {
     String token;
-    int id;
+    Integer idRol;
     String username;
 }

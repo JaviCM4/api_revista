@@ -3,8 +3,6 @@ package revista_backend.dto.user;
 import lombok.Value;
 import revista_backend.models.user.User;
 
-import java.time.LocalDate;
-
 @Value
 public class UserUpdateResponse {
 
