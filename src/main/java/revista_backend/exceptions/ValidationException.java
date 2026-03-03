@@ -1,7 +1,7 @@
 package revista_backend.exceptions;
 
 /**
- * Excepción para errores en los datos de entrada
+ * Excepción que se lanza para errores en los datos de entrada
  */
 public class ValidationException extends Exception {
 

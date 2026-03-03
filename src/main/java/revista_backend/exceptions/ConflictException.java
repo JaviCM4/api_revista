@@ -1,7 +1,7 @@
 package revista_backend.exceptions;
 
 /**
- * Excepción cuando hay un conflicto con un recurso (ej: duplicado)
+ * Excepción que se lanza cuando hay un conflicto con un recurso (ej: duplicado)
  */
 public class ConflictException extends Exception {
     

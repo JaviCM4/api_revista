@@ -1,8 +1,8 @@
 package revista_backend.exceptions;
 
-/*
- * Excepción lanzada cuando hay dinero insuficiente
- * */
+/**
+ * Excepción que se lanza cuando no se tiene la cantidad de dinero suficiente para realizar la transacción
+ */
 public class MoneyException extends Exception {
 
     public MoneyException() {}

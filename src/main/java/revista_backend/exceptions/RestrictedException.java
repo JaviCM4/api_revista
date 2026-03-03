@@ -1,7 +1,7 @@
 package revista_backend.exceptions;
 
 /**
- * Excepción se hace sobre un elemento bloqueado por el usuario
+ * Excepción que se lanza sobre un elemento bloqueado por un usuario (Ejemplo: Realizar comentarios o dar like)
  */
 public class RestrictedException extends Exception {
 

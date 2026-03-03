@@ -1,7 +1,7 @@
 package revista_backend.exceptions;
 
 /**
- * Excepción cuando un recurso no es encontrado
+ * Excepción que se lanza cuando un recurso no es encontrado
  */
 public class ResourceNotFoundException extends Exception {
 
