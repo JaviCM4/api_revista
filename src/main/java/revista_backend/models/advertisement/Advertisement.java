@@ -18,7 +18,7 @@ public class Advertisement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -34,9 +34,6 @@ public class Advertisement {
     @JoinColumn(name = "estado_anuncio_id")
     @JsonIgnore
     private AdStatus adStatus;
-
-    @Column(name = "contenido")
-    private String content;
 
     @Column(name = "costo_total")
     private int totalCost;

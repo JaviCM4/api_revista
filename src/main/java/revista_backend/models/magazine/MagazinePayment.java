@@ -16,7 +16,7 @@ public class MagazinePayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "revista_id")
@@ -24,7 +24,7 @@ public class MagazinePayment {
     private Magazine magazine;
 
     @Column(name = "pago")
-    private int payment;
+    private Integer payment;
 
     @Column(name = "fecha_pago")
     private LocalDate paymentDate;

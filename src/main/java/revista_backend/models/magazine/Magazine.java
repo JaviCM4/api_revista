@@ -16,7 +16,7 @@ public class Magazine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -42,10 +42,10 @@ public class Magazine {
     private boolean activeMagazine;
 
     @Column(name = "costo_dia")
-    private int dailyCost;
+    private Integer dailyCost;
 
     @Column(name = "costo_bloqueo_anuncio")
-    private int adBlockCost;
+    private Integer adBlockCost;
 
     @Column(name = "fecha_creacion")
     private LocalDate creationDate;

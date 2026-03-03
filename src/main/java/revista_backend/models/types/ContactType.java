@@ -1,14 +1,15 @@
-package revista_backend.models.status;
+package revista_backend.models.types;
+
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "estado_anuncio")
+@Table(name = "tipo_contacto")
 @Data
 @NoArgsConstructor
-public class AdStatus {
+public class ContactType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

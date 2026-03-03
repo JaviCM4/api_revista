@@ -1,33 +1,33 @@
-package revista_backend.models.magazine;
+package revista_backend.models.contact;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import revista_backend.models.types.ContactType;
 import revista_backend.models.user.User;
 
-import java.time.LocalDate;
-
 @Entity
-@Table(name = "suscripcion_revista")
+@Table(name = "contacto")
 @Data
 @NoArgsConstructor
-public class MagazineSubscription {
+public class Contact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "revista_id")
-    @JsonIgnore
-    private Magazine magazine;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     @JsonIgnore
-    private User user;
+    User user;
 
-    @Column(name = "fecha_suscripcion")
-    private LocalDate subscriptionDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tipo_contacto_id")
+    @JsonIgnore
+    ContactType contactType;
+
+    @Column(name = "detalle")
+    String detail;
+
 }

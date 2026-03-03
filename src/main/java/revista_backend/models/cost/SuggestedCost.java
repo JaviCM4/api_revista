@@ -14,16 +14,11 @@ public class SuggestedCost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tipo_costo_id")
-    @JsonIgnore
-    private CostType costType;
+    private Integer id;
 
     @Column(name = "costo")
-    private int cost;
+    private Integer cost;
 
     @Column(name = "dias")
-    private int days;
+    private Integer days;
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import revista_backend.models.user.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "credencial")
 @Data
@@ -14,7 +16,7 @@ public class Credential {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -26,4 +28,19 @@ public class Credential {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "token_recuperacion")
+    private String tokenRecovery;
+
+    @Column(name = "fecha_fin_recuperacion")
+    private LocalDateTime recoveryEndDate;
+
+    @Column(name = "token_verifcacion")
+    private String tokenVerification;
+
+    @Column(name = "fecha_fin_verificacion")
+    private LocalDateTime verificationEndDate;
+
+    @Column(name = "verificacion_activa")
+    private boolean activeVerification;
 }

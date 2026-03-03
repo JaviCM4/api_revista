@@ -20,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_usuario_id")
@@ -58,7 +58,7 @@ public class User {
     private String description;
 
     @Column(name = "dinero_disponible")
-    private int availableMoney;
+    private Integer availableMoney;
     
     public void updateEntity(UserUpdateRequest dto) {
         this.names = dto.getNames();
