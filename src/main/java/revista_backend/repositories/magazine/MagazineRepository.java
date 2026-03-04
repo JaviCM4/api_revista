@@ -19,4 +19,6 @@ public interface MagazineRepository extends JpaRepository<Magazine, Integer> {
         WHERE mc.magazineCategoryType.id = :idCategory
     """)
     List<Magazine> findByCategory_Id(Integer idCategory);
+
+    List<Magazine> findByActiveMagazine(Boolean activeMagazine);
 }

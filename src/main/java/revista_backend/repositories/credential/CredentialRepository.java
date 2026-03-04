@@ -9,8 +9,12 @@ import revista_backend.models.credential.Credential;
 public interface CredentialRepository extends JpaRepository<Credential, Integer> {
 
     boolean existsByUsername(String username);
-    
-    boolean existsByUsernameAndPassword(String username, String password);
-    
+
     Optional<Credential> findByUsername(String username);
+
+    Optional<Credential> findByUser_Id(Integer idUser);
+
+    Optional<Credential> findByTokenRecovery(String token);
+
+    Optional<Credential> findBytokenVerification(String token);
 }

@@ -12,4 +12,6 @@ public interface MagazineInteractionRepository extends JpaRepository<MagazineInt
     MagazineInteraction findByMagazine_IdAndUser_Id(int magazineId, int userId);
 
     List<MagazineInteraction> findByMagazine_Id(int magazineId);
+
+    Integer countByMagazine_IdAndLikedTrue(Integer idMagazine);
 }

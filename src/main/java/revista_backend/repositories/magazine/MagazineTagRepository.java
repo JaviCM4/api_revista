@@ -15,4 +15,5 @@ public interface MagazineTagRepository extends JpaRepository<MagazineTag, Intege
 
     List<MagazineTag> findByMagazine_Id(Integer magazineId);
 
+    List<MagazineTag> findByDetailIgnoreCase(String tag);
 }
