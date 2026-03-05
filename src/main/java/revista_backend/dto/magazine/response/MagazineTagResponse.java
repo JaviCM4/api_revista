@@ -7,10 +7,10 @@ import revista_backend.models.magazine.MagazineTag;
 public class MagazineTagResponse {
 
     Integer id;
-    String TagName;
+    String tagName;
 
     public MagazineTagResponse(MagazineTag magazineTag) {
         this.id = magazineTag.getId();
-        this.TagName = magazineTag.getDetail();
+        this.tagName = magazineTag.getDetail();
     }
 }

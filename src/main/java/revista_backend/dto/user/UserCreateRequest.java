@@ -15,6 +15,10 @@ public class UserCreateRequest {
 
     @NotNull
     @Min(1)
+    Integer idUserType;
+
+    @NotNull
+    @Min(1)
     Integer  userStatus;
 
     @NotNull
