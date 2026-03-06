@@ -19,9 +19,11 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, In
           AND a.id NOT IN (
               SELECT b.advertisement.id
               FROM AdBlock b
-              WHERE b.advertisement.id = :idAdvertisement
+              WHERE b.magazine.id = :idMagazine
                 AND b.adLockStatus.id = 1
           )
     """)
-    List<Advertisement> findAllowedAdsByMagazine(Integer idMagazine);
+    List<Advertisement> findAllowedAdsByMagazine_Id(Integer idMagazine);
+
+    List<Advertisement> findAllByUser_Id(Integer idUser);
 }
