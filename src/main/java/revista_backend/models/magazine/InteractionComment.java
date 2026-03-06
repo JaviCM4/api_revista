@@ -9,10 +9,10 @@ import revista_backend.models.user.User;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "interaccion_likes")
+@Table(name = "interaccion_comentarios")
 @Data
 @NoArgsConstructor
-public class InteractionLike {
+public class InteractionComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,9 @@ public class InteractionLike {
     @JsonIgnore
     private User user;
 
-    @Column(name = "me_gusta")
-    private Boolean liked;
+    @Column(name = "comentario")
+    private String comment;
 
-    @Column(name = "fecha_me_gusta")
-    private LocalDate likeDate;
+    @Column(name = "fecha_comentario")
+    private LocalDate commentDate;
 }
