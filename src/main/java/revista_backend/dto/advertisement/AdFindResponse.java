@@ -10,6 +10,7 @@ public class AdFindResponse {
 
     Integer idAdvertisement;
     Integer idAdType;
+    String adStatusName;
     LocalDate expirationDate;
     List<String> links;
 }
