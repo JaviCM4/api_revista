@@ -31,16 +31,24 @@ CREATE TABLE suscripcion_revista (
     UNIQUE KEY unique_suscripcion (revista_id, usuario_id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE interaccion_revista (
+CREATE TABLE interaccion_likes (
      id INT AUTO_INCREMENT PRIMARY KEY,
      revista_id INT NOT NULL,
      usuario_id INT NOT NULL,
      me_gusta BOOLEAN,
      fecha_me_gusta DATETIME,
-     comentario TEXT,
-     fecha_comentario DATETIME,
      FOREIGN KEY (revista_id) REFERENCES revista(id) ON DELETE CASCADE ON UPDATE CASCADE,
      FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE interaccion_comentarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    revista_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    comentario TEXT,
+    fecha_comentario DATETIME,
+    FOREIGN KEY (revista_id) REFERENCES revista(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE pago_revista (

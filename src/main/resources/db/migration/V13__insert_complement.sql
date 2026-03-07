@@ -214,16 +214,15 @@ INSERT INTO etiqueta_revista (revista_id, detalle) VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO edicion (revista_id, recurso, fecha_creacion) VALUES
-    (1, 'https://storage.revistas.gt/tech-monthly/edicion-01.pdf',  '2025-01-15 00:00:00'),
-    (1, 'https://storage.revistas.gt/tech-monthly/edicion-02.pdf',  '2025-02-15 00:00:00'),
-    (1, 'https://storage.revistas.gt/tech-monthly/edicion-03.pdf',  '2025-03-15 00:00:00'),
-    (2, 'https://storage.revistas.gt/gadget-world/edicion-01.pdf',  '2025-03-10 00:00:00'),
-    (3, 'https://storage.revistas.gt/science-today/edicion-01.pdf', '2025-02-20 00:00:00'),
-    (3, 'https://storage.revistas.gt/science-today/edicion-02.pdf', '2025-03-20 00:00:00'),
-    (5, 'https://storage.revistas.gt/deporte-total/edicion-01.pdf', '2025-02-01 00:00:00'),
-    (5, 'https://storage.revistas.gt/deporte-total/edicion-02.pdf', '2025-03-01 00:00:00'),
-    (6, 'https://storage.revistas.gt/fitness-pro/edicion-01.pdf',   '2025-04-15 00:00:00');
-
+    (1, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf',  '2025-01-15 00:00:00'),
+    (1, 'https://portal.ct.gov/sitecore-center/-/media/sitecore-center/digital-training-center/sample-pdf-for-the-media-library-2.pdf',  '2025-02-15 00:00:00'),
+    (1, 'https://secretariat.goa.gov.in/PDFs/sample.pdf',  '2025-03-15 00:00:00'),
+    (2, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf',  '2025-03-10 00:00:00'),
+    (3, 'https://sofibanque.com/wp-content/uploads/2018/10/pdf_link_testing.pdf', '2025-02-20 00:00:00'),
+    (3, 'https://portal.ct.gov/-/media/Departments-and-Agencies/DPH/dph/environmental_health/2018-UPLOADS/TESTING-URL-LINK-INSERTS.pdf', '2025-03-20 00:00:00'),
+    (5, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf', '2025-02-01 00:00:00'),
+    (5, 'https://secretariat.goa.gov.in/PDFs/sample.pdf', '2025-03-01 00:00:00'),
+    (6, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf', '2025-04-15 00:00:00');
 
 -- -------------------------------------------------------------
 --  SUSCRIPCIONES
@@ -245,17 +244,29 @@ INSERT INTO suscripcion_revista (revista_id, usuario_id, fecha_suscripcion) VALU
 --  INTERACCIONES
 -- -------------------------------------------------------------
 
-INSERT INTO interaccion_revista (revista_id, usuario_id, me_gusta, fecha_me_gusta, comentario, fecha_comentario) VALUES
-    (1,  7,  TRUE,  '2025-01-21 10:30:00', 'Excelente contenido, muy actualizado!',        '2025-01-21 10:35:00'),
-    (1,  8,  TRUE,  '2025-01-23 14:00:00', 'La mejor revista tech de Guatemala.',           '2025-01-23 14:05:00'),
-    (1,  10, TRUE,  '2025-02-02 09:15:00', 'Muy buen análisis del mercado tecnológico.',    '2025-02-02 09:20:00'),
-    (1,  7,  FALSE, NULL,                  'Esperando la edición de abril con ansias.',     '2025-03-20 10:00:00'),  -- comentario sin reacción
-    (3,  8,  TRUE,  '2025-02-19 16:45:00', 'El artículo sobre cambio climático es muy útil.', '2025-02-19 17:00:00'),
-    (3,  9,  TRUE,  '2025-03-02 12:30:00', 'Me gusta el enfoque divulgativo.',              '2025-03-02 12:45:00'),
-    (5,  7,  TRUE,  '2025-02-06 20:00:00', 'Gran cobertura de la liga local!',              '2025-02-06 20:15:00'),
-    (5,  10, TRUE,  '2025-02-11 18:30:00', 'Excelentes estadísticas y análisis.',           '2025-02-11 18:45:00'),
-    (6,  9,  FALSE, NULL,                  'El plan de entrenamiento de 8 semanas es genial.', '2025-04-21 08:00:00'),
-    (6,  10, FALSE, NULL,                  'Quisiera más contenido de nutrición.',           '2025-04-23 09:30:00');
+INSERT INTO interaccion_likes (revista_id, usuario_id, me_gusta, fecha_me_gusta) VALUES
+    (1,  7,  TRUE,  '2025-01-21 10:30:00'),
+    (1,  8,  TRUE,  '2025-01-23 14:00:00'),
+    (1,  10, TRUE,  '2025-02-02 09:15:00'),
+    (3,  8,  TRUE,  '2025-02-19 16:45:00'),
+    (3,  9,  TRUE,  '2025-03-02 12:30:00'),
+    (5,  7,  TRUE,  '2025-02-06 20:00:00'),
+    (5,  10, TRUE,  '2025-02-11 18:30:00'),
+    (6,  9,  FALSE, NULL),
+    (6,  10, FALSE, NULL);
+
+
+INSERT INTO interaccion_comentarios (revista_id, usuario_id, comentario, fecha_comentario) VALUES
+    (1,  7, 'Excelente contenido, muy actualizado!', '2025-01-21 10:35:00'),
+    (1,  8, 'La mejor revista tech de Guatemala.', '2025-01-23 14:05:00'),
+    (1,  10, 'Muy buen análisis del mercado tecnológico.', '2025-02-02 09:20:00'),
+    (1,  7, 'Esperando la edición de abril con ansias.', '2025-03-20 10:00:00'),
+    (3,  8, 'El artículo sobre cambio climático es muy útil.', '2025-02-19 17:00:00'),
+    (3,  9, 'Me gusta el enfoque divulgativo.', '2025-03-02 12:45:00'),
+    (5,  7, 'Gran cobertura de la liga local!', '2025-02-06 20:15:00'),
+    (5,  10, 'Excelentes estadísticas y análisis.', '2025-02-11 18:45:00'),
+    (6,  9, 'El plan de entrenamiento de 8 semanas es genial.', '2025-04-21 08:00:00'),
+    (6,  10, 'Quisiera más contenido de nutrición.', '2025-04-23 09:30:00');
 
 
 -- -------------------------------------------------------------
@@ -295,7 +306,7 @@ INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, costo_total
     (12, 3, 2,  85, '2026-01-01 08:00:00', '2026-01-08 08:00:00'),
 
     -- Anunciante 13
-    (13, 2, 1,  50, '2026-02-05 10:00:00', '2026-02-12 10:00:00'),
+    (13, 1, 1,  50, '2026-02-05 10:00:00', '2026-02-12 10:00:00'),
     (13, 1, 2,  10, '2026-01-15 10:00:00', '2026-01-16 10:00:00'),
 
     -- Anunciante 14
@@ -304,7 +315,7 @@ INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, costo_total
 
     -- Anunciante 15
     (15, 1, 2,  10, '2026-01-20 09:00:00', '2026-01-21 09:00:00'),
-    (15, 2, 2,  50, '2026-01-20 09:00:00', '2026-01-27 09:00:00');
+    (15, 1, 2,  50, '2026-01-20 09:00:00', '2026-01-27 09:00:00');
 
 
 -- -------------------------------------------------------------
@@ -312,15 +323,18 @@ INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, costo_total
 -- -------------------------------------------------------------
 
 INSERT INTO contenido_extra (anuncio_id, recurso) VALUES
-    (1, 'https://storage.revistas.gt/anuncios/techstore-iphone16.jpg'),
-    (2, 'https://storage.revistas.gt/anuncios/techstore-video-promo.mp4'),
-    (3, 'https://storage.revistas.gt/anuncios/boutique-primavera2026.jpg'),
-    (4, 'https://storage.revistas.gt/anuncios/ricardosolano-campana.mp4'),
-    (5, 'https://storage.revistas.gt/anuncios/ricardosolano-banner.jpg'),
-    (6, 'https://storage.revistas.gt/anuncios/mariana-viajes-banner.jpg'),
-    (7, 'https://storage.revistas.gt/anuncios/ricardosolano-campana.mp4'),
-    (8, 'https://storage.revistas.gt/anuncios/ricardosolano-banner.jpg'),
-    (9, 'https://storage.revistas.gt/anuncios/mariana-viajes-banner.jpg');
+    (1, 'Prueba de texto para el almancenamiento de la informacion'),
+    (2, 'https://tse4.mm.bing.net/th/id/OIP.RCio942ArFiqE_G1B4KFvAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3'),
+    (2, 'Vista de Guatemala para el recuerdo y notificacion de los interesados'),
+    (3, 'https://youtu.be/5ehRoUav9aM?si=Uc7jxOsDF9iX5bVC'),
+    (4, 'https://michaelshapiro.net/wp-content/uploads/2019/09/Guatemala-1280x1006.jpg'),
+    (5, 'https://ychef.files.bbci.co.uk/976x549/p08qwn2b.jpg'),
+    (6, 'https://youtu.be/SiSTxIB2mvo?si=d9NRyYNhXahaFDCl'),
+    (7, 'https://pswscience.org/wp-content/uploads/2023/01/PSW-2472-Hansen-danta...fares-glonal-conservation.png'),
+    (7, 'ggggggggggggggggggg gggggg ggggg ggg ggg gggggggggggggg'),
+    (8, 'https://tse2.mm.bing.net/th/id/OIP.x4Ft--VqGT1IMxQrkO7GZgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3'),
+    (9, 'https://i.pinimg.com/736x/6f/26/84/6f2684269e84bae8a477cf6e16cf266d.jpg');
+
 
 
 -- -------------------------------------------------------------
