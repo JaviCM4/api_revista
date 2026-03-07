@@ -11,19 +11,23 @@ import revista_backend.models.user.User;
 import java.time.LocalDate;
 
 @Value
-public class UserCreateRequest {
+public class UserCreateAdminRequest {
 
     @NotNull
     @Min(1)
-    Integer  userStatus;
+    Integer idUserType;
 
     @NotNull
     @Min(1)
-    Integer  sexType;
+    Integer userStatus;
 
     @NotNull
     @Min(1)
-    Integer  municipioId;
+    Integer sexType;
+
+    @NotNull
+    @Min(1)
+    Integer municipioId;
 
     @NotBlank
     @Size(max = 50)
@@ -54,14 +58,6 @@ public class UserCreateRequest {
     @Email(message = "Formato de email inválido")
     String email;
 
-    @NotBlank 
-    @Size(min = 8, max = 100)
-    @Pattern(
-        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
-        message = "La contraseña mal Implementada"
-    )
-    String password;
-
     public User createEntity(UserType userType, UserStatus userStatus, SexType sexType, Municipality municipality) {
         User user = new User();
         user.setUserType(userType);
@@ -77,4 +73,3 @@ public class UserCreateRequest {
         return user;
     }
 }
-
