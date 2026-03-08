@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import revista_backend.models.magazine.MagazineSubscription;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +16,10 @@ public interface MagazineSubscriptionRepository extends JpaRepository<MagazineSu
     Optional<MagazineSubscription> findByMagazine_IdAndUser_Id(Integer magazineId, Integer userId);
 
     List<MagazineSubscription> findByUser_Id(int userId);
+
+    List<MagazineSubscription> findBySubscriptionDateBetweenAndMagazine_User_Id(LocalDate startDate, LocalDate endDate, Integer idUser);
+
+    List<MagazineSubscription> findByMagazine_User_Id(Integer idUser);
+
+    List<MagazineSubscription> findBySubscriptionDateBetween(LocalDate startDate, LocalDate endDate);
 }

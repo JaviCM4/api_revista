@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import revista_backend.models.advertisement.Advertisement;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -26,4 +27,6 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, In
     List<Advertisement> findAllowedAdsByMagazine_Id(Integer idMagazine);
 
     List<Advertisement> findAllByUser_Id(Integer idUser);
+
+    List<Advertisement> findByCreationDateBetween(LocalDate startDate, LocalDate endDate);
 }

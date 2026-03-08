@@ -7,5 +7,5 @@ import revista_backend.models.cost.SuggestedCost;
 @Repository
 public interface SuggestedCostRepository extends JpaRepository<SuggestedCost, Integer> {
 
-    boolean existsByCostAndDays(int cost, int days);
+    boolean existsByDays(int days);
 }
