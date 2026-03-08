@@ -1,6 +1,7 @@
 package revista_backend.dto.reports.five;
 
 import lombok.Value;
+import revista_backend.dto.reports.common.AdBlockReport;
 
 import java.util.List;
 

@@ -7,5 +7,5 @@ import java.util.List;
 @Value
 public class EditionFindResponse {
     Integer idMagazine;
-    List<String> links;
+    List<EditionResponse> links;
 }
