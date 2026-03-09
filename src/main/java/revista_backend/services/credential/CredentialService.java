@@ -1,7 +1,7 @@
 package revista_backend.services.credential;
 
-import revista_backend.dto.credential.CredentialResponse;
 import revista_backend.dto.credential.CredentialResquest;
+import revista_backend.dto.credential.FirstLoginRequest;
 import revista_backend.dto.credential.JwtResponse;
 import revista_backend.dto.credential.RecoverPasswordRequest;
 import revista_backend.exceptions.ConflictException;
@@ -37,5 +37,11 @@ public interface CredentialService {
      */
     JwtResponse verifyLoginToken(String tokenVerificacion)
             throws ResourceNotFoundException, ValidationException;
+
+    void verifyFirstLogin(FirstLoginRequest dto)
+            throws ResourceNotFoundException, ValidationException;
+
+    void sendLoginToken(Integer idUser)
+            throws ResourceNotFoundException, ConflictException;
 }
 

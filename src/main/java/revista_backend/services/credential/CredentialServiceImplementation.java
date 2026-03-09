@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import revista_backend.dto.credential.CredentialResquest;
+import revista_backend.dto.credential.FirstLoginRequest;
 import revista_backend.dto.credential.JwtResponse;
 import revista_backend.dto.credential.RecoverPasswordRequest;
 import revista_backend.exceptions.ConflictException;
@@ -145,6 +146,51 @@ public class CredentialServiceImplementation implements CredentialService {
         credentialRepository.save(credential);
         String tokenResp = jwtUtil.generateToken(credential.getUsername(), credential.getId());
         return new JwtResponse(tokenResp, credential.getUser().getUserType().getId(), credential.getUsername());
+    }
+
+    @Override
+    public void verifyFirstLogin(FirstLoginRequest dto)
+            throws ResourceNotFoundException, ValidationException {
+        Credential credential = credentialRepository.findBytokenVerification(dto.getToken())
+                .orElseThrow(() -> new ResourceNotFoundException("Credential not found"));
+
+        if (credential.getVerificationEndDate() != null && credential.getVerificationEndDate().isBefore(LocalDateTime.now())) {
+            throw new ValidationException("Expired Token");
+        }
+
+        if (credential.getPassword() != null) {
+            throw new ValidationException("This is not your first login");
+        }
+
+        if (!credential.getUsername().equals(dto.getUsername())) {
+            throw new ValidationException("Incorrect username");
+        }
+
+        credential.setTokenVerification(null);
+        credential.setVerificationEndDate(null);
+        credential.setPassword(passwordEncoder.encode(dto.getPassword()));
+        credentialRepository.save(credential);
+    }
+
+    @Override
+    public void sendLoginToken(Integer idUser)
+            throws ResourceNotFoundException, ConflictException {
+        Credential credential = credentialRepository.findByUser_Id(idUser)
+                .orElseThrow(() -> new ResourceNotFoundException("Credential not found"));
+
+        Contact contact = contactRepository.findByUser_IdAndContactType_Id(idUser, 1)
+                .orElseThrow(() -> new ResourceNotFoundException("Credential not found"));
+
+        if (!credential.getPassword().isBlank()) {
+            throw new ConflictException("This user has already logged in for the first time");
+        }
+
+        String token = java.util.UUID.randomUUID().toString();
+        credential.setTokenVerification(token);
+        credential.setVerificationEndDate(LocalDateTime.now().plusMinutes(5));
+
+        credentialRepository.save(credential);
+        mailService.sendTokenEmail(contact.getDetail(), token, "firstLogin");
     }
 }
 
