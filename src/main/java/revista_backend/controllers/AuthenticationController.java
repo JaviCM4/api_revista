@@ -10,10 +10,8 @@ import revista_backend.dto.credential.*;
 import revista_backend.exceptions.ConflictException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
-import revista_backend.security.JwtUtil;
 import revista_backend.security.SecurityUtils;
 import revista_backend.services.credential.CredentialService;
-import revista_backend.services.credential.CredentialServiceImplementation;
 
 @RestController
 @RequestMapping("/v1/auth")

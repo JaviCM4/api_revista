@@ -5,7 +5,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import revista_backend.dto.magazine.request.MagazineCreateRequest;
@@ -17,7 +16,6 @@ import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
 import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.security.SecurityUtils;
-import revista_backend.models.magazine.Magazine;
 import revista_backend.services.magazine.MagazineServiceImplementation;
 
 import java.util.List;

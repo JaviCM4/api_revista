@@ -17,7 +17,6 @@ import revista_backend.exceptions.ValidationException;
 import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.security.SecurityUtils;
 import revista_backend.services.advertisement.AdvertisementService;
-import revista_backend.services.advertisement.AdvertisementServiceImplementation;
 
 import java.util.List;
 

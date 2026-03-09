@@ -49,7 +49,7 @@ public class EditionController {
     @DeleteMapping("/{idEdition}")
     @RolesAllowed("EDITOR")
     public ResponseEntity<Void> deleteEdition(@PathVariable Integer idEdition)
-        throws ResourceNotFoundException {
+            throws ResourceNotFoundException {
         editionService.delete(idEdition);
         return ResponseEntity.noContent().build();
     }
