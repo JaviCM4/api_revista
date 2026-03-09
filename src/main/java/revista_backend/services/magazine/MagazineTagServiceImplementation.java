@@ -1,4 +1,4 @@
-package revista_backend.services.magazine.implementation;
+package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

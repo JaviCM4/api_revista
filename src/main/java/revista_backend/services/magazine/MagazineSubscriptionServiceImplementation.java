@@ -1,4 +1,4 @@
-package revista_backend.services.magazine.implementation;
+package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,28 +30,28 @@ public class MagazineSubscriptionServiceImplementation implements MagazineSubscr
     }
 
     @Override
-    public void create(SubscriptionCreateRequest dto)
+    public void create(SubscriptionCreateRequest dto, Integer idUser)
             throws ResourceNotFoundException, ConflictException, RestrictedException, ValidationException {
 
         Magazine magazine = magazineRepository.findById(dto.getIdMagazine())
                 .orElseThrow(() -> new ResourceNotFoundException("Magazine not found"));
 
         if (!magazine.isAllowSubscription()) {
-            throw new RestrictedException("No está habilitado para suscripciones");
+            throw new RestrictedException("You are not eligible for subscriptions to this magazine");
         }
 
-        User user = userRepository.findById(dto.getIdUser())
+        User user = userRepository.findById(idUser)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (magazine.getCreationDate().isBefore(dto.getCreateDate())) {
-            throw new ValidationException("La fecha de creación de la revista es anterior a la fecha de suscripción");
+        if (dto.getCreateDate().isBefore(magazine.getCreationDate())) {
+            throw new ValidationException("You cannot subscribe before the magazine exists.");
         }
 
         boolean exists = magazineSubscriptionRepository
-                .existsByMagazine_IdAndUser_Id(dto.getIdMagazine(), dto.getIdUser());
+                .existsByMagazine_IdAndUser_Id(dto.getIdMagazine(), idUser);
 
         if (exists) {
-            throw new ConflictException("Ya está suscripto a esta revista");
+            throw new ConflictException("You are already subscribed to this magazine");
         }
 
         MagazineSubscription newSubscription = dto.create(magazine, user);
@@ -60,8 +60,8 @@ public class MagazineSubscriptionServiceImplementation implements MagazineSubscr
 
 
     @Override
-    public void delete(SubscriptionCreateRequest dto) throws ResourceNotFoundException {
-        MagazineSubscription subscription = magazineSubscriptionRepository.findByMagazine_IdAndUser_Id(dto.getIdMagazine(), dto.getIdUser())
+    public void delete(Integer idMagazine, Integer idUser) throws ResourceNotFoundException {
+        MagazineSubscription subscription = magazineSubscriptionRepository.findByMagazine_IdAndUser_Id(idMagazine, idUser)
                 .orElseThrow(() -> new ResourceNotFoundException("Subscription not found"));
         magazineSubscriptionRepository.delete(subscription);
     }

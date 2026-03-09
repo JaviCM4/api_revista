@@ -1,13 +1,10 @@
 package revista_backend.services.user;
 
-import java.lang.module.ResolutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import revista_backend.dto.user.UserCreateRequest;
-import revista_backend.dto.user.UserFindResponse;
-import revista_backend.dto.user.UserUpdateRequest;
-import revista_backend.dto.user.UserUpdateResponse;
+import revista_backend.dto.user.*;
 import revista_backend.exceptions.ResourceNotFoundException;
+import revista_backend.exceptions.ValidationException;
 import revista_backend.models.location.Municipality;
 import revista_backend.models.status.UserStatus;
 import revista_backend.models.types.SexType;
@@ -41,20 +38,13 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public User create(UserCreateRequest dto) throws ResourceNotFoundException {
-        UserType userType = userTypeRepository.findById(2)
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de usuario no encontrado"));
+        User newUser = buildUser(dto, 2, dto.getUserStatus(), dto.getSexType(), dto.getMunicipioId());
+        return userRepository.save(newUser);
+    }
 
-        UserStatus userStatus = userStatusRepository.findById(dto.getUserStatus())
-                .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado"));
-
-        SexType sexType = sexTypeRepository.findById(dto.getSexType())
-                .orElseThrow(() -> new ResourceNotFoundException("Sexo no encontrado"));
-
-        Municipality municipality = municipalityRepository.findById(dto.getMunicipioId())
-                .orElseThrow(() -> new ResourceNotFoundException("Municipio no encontrado"));
-
-        User newUser = dto.createEntity(userType, userStatus, sexType, municipality);
-
+    @Override
+    public User createAdmin(UserCreateAdminRequest dto) throws ResourceNotFoundException {
+        User newUser = buildUser(dto, dto.getIdUserType(), dto.getUserStatus(), dto.getSexType(), dto.getMunicipioId());
         return userRepository.save(newUser);
     }
 
@@ -67,33 +57,74 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public UserFindResponse findById(Integer id) throws ResourceNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+    public UserFindResponse findById(Integer idUser) throws ResourceNotFoundException {
+        User user = userRepository.findById(idUser)
+                                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         return new UserFindResponse(user);
     }
 
     @Override
-    public UserUpdateResponse update(Integer id, UserUpdateRequest dto) throws ResourceNotFoundException {
-        User user = userRepository.findById(id)
+    public UserUpdateResponse update(UserUpdateRequest dto, Integer idUser)
+            throws ResourceNotFoundException {
+        User user = userRepository.findById(idUser)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        user.updateFrom(dto);
+        user.updateEntity(dto);
         userRepository.save(user);
         return new UserUpdateResponse(user);
     }
 
     @Override
-    public void deleteById(Integer id) throws ResourceNotFoundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+    public void suspendUser(Integer idUser) throws ResourceNotFoundException {
+        User user = userRepository.findById(idUser)
+                                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        UserStatus userStatus = userStatusRepository.findById(4)
+        UserStatus userStatus = userStatusRepository.findById(2)
                 .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado"));
-        
+
         user.setUserStatus(userStatus);
         userRepository.save(user);
     }
-}
 
+    @Override
+    public void updateMoney(Integer money, Integer idUser)
+            throws ResourceNotFoundException, ValidationException {
+        if (money == null || money < 0) {
+            throw new ValidationException("The amount must be a positive integer.");
+        }
+
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        user.setAvailableMoney(user.getAvailableMoney() + money);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteById(Integer idUser) throws ResourceNotFoundException {
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        UserStatus deleteStatus = userStatusRepository.findById(4)
+                .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado"));
+
+        user.setUserStatus(deleteStatus);
+        userRepository.save(user);
+    }
+
+    private User buildUser(Object dto, Integer userTypeId, Integer userStatusId, Integer sexTypeId, Integer municipioId) throws ResourceNotFoundException {
+        UserType userType        = userTypeRepository.findById(userTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tipo de usuario no encontrado"));
+        UserStatus userStatus    = userStatusRepository.findById(userStatusId)
+                .orElseThrow(() -> new ResourceNotFoundException("Estado no encontrado"));
+        SexType sexType          = sexTypeRepository.findById(sexTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Sexo no encontrado"));
+        Municipality municipality = municipalityRepository.findById(municipioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Municipio no encontrado"));
+
+        return dto instanceof UserCreateRequest r
+                ? r.createEntity(userType, userStatus, sexType, municipality)
+                : ((UserCreateAdminRequest) dto).createEntity(userType, userStatus, sexType, municipality);
+    }
+}

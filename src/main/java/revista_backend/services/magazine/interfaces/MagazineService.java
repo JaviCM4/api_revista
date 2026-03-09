@@ -5,6 +5,7 @@ import revista_backend.dto.magazine.request.MagazineUpdateCostRequest;
 import revista_backend.dto.magazine.request.MagazineUpdatePermissionsRequest;
 import revista_backend.dto.magazine.response.MagazineFindNormalResponse;
 import revista_backend.dto.magazine.response.MagazineFindResponse;
+import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
 import revista_backend.models.magazine.Magazine;
@@ -13,11 +14,12 @@ import java.util.List;
 
 public interface MagazineService {
 
-    Magazine create(MagazineCreateRequest dto) throws ResourceNotFoundException, ValidationException;
+    Magazine create(MagazineCreateRequest dto, Integer idUser) throws ResourceNotFoundException, ValidationException;
 
     void updateCostMagazine(MagazineUpdateCostRequest dto) throws ResourceNotFoundException;
 
-    void updatePermissionsMagazine(MagazineUpdatePermissionsRequest dto) throws ResourceNotFoundException;
+        void updatePermissionsMagazine(MagazineUpdatePermissionsRequest dto, Integer idUser)
+            throws ResourceNotFoundException, AccessDeniedException;
 
     List<MagazineFindNormalResponse> findAllNormal();
 

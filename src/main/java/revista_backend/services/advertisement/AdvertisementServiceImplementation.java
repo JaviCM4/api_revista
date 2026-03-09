@@ -166,45 +166,45 @@ public class AdvertisementServiceImplementation implements AdvertisementService 
     @Override
     public List<AdFindResponse> findAllByAdvertiser (Integer idUser) {
         return advertisementRepository.findAllByUser_Id(idUser)
-            .stream()
-            .map(ad -> {
-                List<ExtraContent> extras = extraContentRepository.findByAdvertisement_Id(ad.getId());
+                .stream()
+                .map(ad -> {
+                    List<ExtraContent> extras = extraContentRepository.findByAdvertisement_Id(ad.getId());
 
-                List<String> links = extras.stream()
-                        .map(ExtraContent::getResource)
-                        .toList();
+                    List<String> links = extras.stream()
+                            .map(ExtraContent::getResource)
+                            .toList();
 
-                return new AdFindResponse(
-                        ad.getId(),
-                        ad.getAdType().getId(),
-                        ad.getAdStatus().getName(),
-                        ad.getExpirationDate(),
-                        links
-                );
-            })
-            .toList();
+                    return new AdFindResponse(
+                            ad.getId(),
+                            ad.getAdType().getId(),
+                            ad.getAdStatus().getName(),
+                            ad.getExpirationDate(),
+                            links
+                    );
+                })
+                .toList();
     }
 
     @Override
     public List<AdFindResponse> findAllAdByMagazine(Integer idMagazine) throws ResourceNotFoundException {
         return advertisementRepository.findAllowedAdsByMagazine_Id(idMagazine)
-            .stream()
-            .map(ad -> {
-                List<ExtraContent> extras = extraContentRepository.findByAdvertisement_Id(ad.getId());
+                .stream()
+                .map(ad -> {
+                    List<ExtraContent> extras = extraContentRepository.findByAdvertisement_Id(ad.getId());
 
-                List<String> links = extras.stream()
-                        .map(ExtraContent::getResource)
-                        .toList();
+                    List<String> links = extras.stream()
+                            .map(ExtraContent::getResource)
+                            .toList();
 
-                return new AdFindResponse(
-                        ad.getId(),
-                        ad.getAdType().getId(),
-                        ad.getAdStatus().getName(),
-                        ad.getExpirationDate(),
-                        links
-                );
-            })
-            .toList();
+                    return new AdFindResponse(
+                            ad.getId(),
+                            ad.getAdType().getId(),
+                            ad.getAdStatus().getName(),
+                            ad.getExpirationDate(),
+                            links
+                    );
+                })
+                .toList();
     }
 
     @Override

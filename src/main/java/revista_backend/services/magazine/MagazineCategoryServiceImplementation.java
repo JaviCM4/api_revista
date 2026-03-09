@@ -1,9 +1,10 @@
-package revista_backend.services.magazine.implementation;
+package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import revista_backend.dto.magazine.request.MagazineCategoryCreateRequest;
 import revista_backend.dto.magazine.response.MagazineCategoryResponse;
+import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.exceptions.ConflictException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.models.categories.MagazineCategory;
@@ -31,20 +32,23 @@ public class MagazineCategoryServiceImplementation implements MagazineCategorySe
     }
 
     @Override
-    public void create(MagazineCategoryCreateRequest dto) throws ResourceNotFoundException, ConflictException {
+    public void create(MagazineCategoryCreateRequest dto, Integer idUser)
+            throws ResourceNotFoundException, ConflictException, AccessDeniedException {
         Magazine magazine = magazineRepository.findById(dto.getIdMagazine())
                 .orElseThrow(() -> new ResourceNotFoundException("Magazine not found"));
 
         MagazineCategoryType magazineType = magazineCategoryTypeRepository.findById(dto.getIdCategoryMagazine())
                 .orElseThrow(() -> new ResourceNotFoundException("Type Category not found"));
 
+        if (!magazine.getUser().getId().equals(idUser)) {
+            throw new AccessDeniedException("Access Denied");
+        }
+
         if (!magazineCategoryRepository.existsByMagazine_IdAndMagazineCategoryType_Id(dto.getIdMagazine(), dto.getIdCategoryMagazine())) {
-            MagazineCategory newMagazineCategory = new MagazineCategory();
-            newMagazineCategory.setMagazine(magazine);
-            newMagazineCategory.setMagazineCategoryType(magazineType);
+            MagazineCategory newMagazineCategory = dto.createEntity(magazine, magazineType);
             magazineCategoryRepository.save(newMagazineCategory);
         } else {
-            throw new ConflictException("Duplicidad de la Categoria");
+            throw new ConflictException("Duplicate category");
         }
     }
 
@@ -58,9 +62,15 @@ public class MagazineCategoryServiceImplementation implements MagazineCategorySe
     }
 
     @Override
-    public void delete(Integer idMagazineCategorie) throws ResourceNotFoundException {
-        if (!magazineCategoryRepository.existsById(idMagazineCategorie)) {
-             throw new ResourceNotFoundException("Magazine Categoria not found");
+    public void delete(Integer idMagazineCategorie, Integer idUser) throws ResourceNotFoundException, AccessDeniedException {
+        MagazineCategory magazineCategory = magazineCategoryRepository.findById(idMagazineCategorie)
+                .orElseThrow(() -> new ResourceNotFoundException("Category Magazine not found"));
+
+        Magazine magazine = magazineRepository.findById(magazineCategory.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Magazine not found"));
+
+        if (!magazine.getUser().getId().equals(idUser)) {
+            throw new AccessDeniedException("You do not have permission to modify this resource");
         }
         magazineCategoryRepository.deleteById(idMagazineCategorie);
     }

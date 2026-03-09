@@ -14,6 +14,9 @@ public interface CredentialService {
     void create(User user, String username, String password)
             throws ConflictException;
 
+    void createAdmin(User user, String username, String correo)
+            throws ConflictException;
+
     JwtResponse getLoginResponse(CredentialResquest credentialRequest)
             throws ResourceNotFoundException, ValidationException;
 

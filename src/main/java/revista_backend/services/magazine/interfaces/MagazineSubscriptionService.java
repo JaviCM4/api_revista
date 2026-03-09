@@ -8,8 +8,8 @@ import revista_backend.exceptions.ValidationException;
 
 public interface MagazineSubscriptionService {
 
-    void create(SubscriptionCreateRequest dto)
+    void create(SubscriptionCreateRequest dto, Integer idUser)
             throws ResourceNotFoundException, ConflictException, RestrictedException, ValidationException;
 
-    void delete(SubscriptionCreateRequest dto) throws ResourceNotFoundException, ConflictException;
+    void delete(Integer idMagazine, Integer idUser) throws ResourceNotFoundException;
 }

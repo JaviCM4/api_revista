@@ -1,4 +1,4 @@
-package revista_backend.services.magazine.implementation;
+package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,6 +7,7 @@ import revista_backend.dto.magazine.request.MagazineUpdateCostRequest;
 import revista_backend.dto.magazine.request.MagazineUpdatePermissionsRequest;
 import revista_backend.dto.magazine.response.MagazineFindNormalResponse;
 import revista_backend.dto.magazine.response.MagazineFindResponse;
+import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
 import revista_backend.models.categories.MagazineCategory;
@@ -43,32 +44,39 @@ public class MagazineServiceImplementation implements MagazineService {
     }
 
     @Override
-    public Magazine create(MagazineCreateRequest dto) throws ResourceNotFoundException, ValidationException {
-        User user = userRepository.findById(dto.getId_user())
-                .orElseThrow(() -> new ResourceNotFoundException("Tipo de usuario no encontrado"));
-
-        if (LocalDate.now().isBefore(dto.getCreateDate())) {
-            throw new ValidationException("La fecha de creación debe ser menor o igual a hoy");
-        }
+    public Magazine create(MagazineCreateRequest dto, Integer idUser)
+            throws ResourceNotFoundException, ValidationException {
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new ResourceNotFoundException("Type User not found"));
 
         Magazine newMagazine =dto.createEntity(user);
         return magazineRepository.save(newMagazine);
     }
 
     @Override
-    public void updateCostMagazine(MagazineUpdateCostRequest dto) throws ResourceNotFoundException {
+    public void updateCostMagazine(MagazineUpdateCostRequest dto)
+            throws ResourceNotFoundException {
         Magazine magazine = magazineRepository.findById(dto.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("Revista no encontrada"));
+                orElseThrow(() -> new ResourceNotFoundException("Magazine not found"));
 
         magazine.setDailyCost(dto.getDailyCost());
         magazine.setAdBlockCost(dto.getAdBlockCost());
+
+        if (!magazine.isActiveMagazine()) {
+            magazine.setActiveMagazine(true);
+        }
         magazineRepository.save(magazine);
     }
 
     @Override
-    public void updatePermissionsMagazine(MagazineUpdatePermissionsRequest dto) throws ResourceNotFoundException {
+    public void updatePermissionsMagazine(MagazineUpdatePermissionsRequest dto, Integer idUser)
+            throws ResourceNotFoundException, AccessDeniedException {
         Magazine magazine = magazineRepository.findById(dto.getId()).
-                orElseThrow(() -> new ResourceNotFoundException("Revista no encontrada"));
+                orElseThrow(() -> new ResourceNotFoundException("Magazine not found"));
+
+        if (!magazine.getUser().getId().equals(idUser)) {
+            throw new AccessDeniedException("User not found");
+        }
 
         magazine.setAllowSubscription(dto.isAllowSubscription());
         magazine.setAllowComments(dto.isAllowComments());
@@ -78,15 +86,15 @@ public class MagazineServiceImplementation implements MagazineService {
 
     @Override
     public List<MagazineFindNormalResponse> findAllNormal() {
-        List<Magazine> magazines = magazineRepository.findAll();
+        List<Magazine> magazines = magazineRepository.findByActiveMagazine(true);
 
         return magazines.stream()
-            .map(magazine -> {
-                List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
-                List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
-                return new MagazineFindNormalResponse(magazine, tags, categories);
-            })
-            .toList();
+                .map(magazine -> {
+                    List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
+                    List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
+                    return new MagazineFindNormalResponse(magazine, tags, categories);
+                })
+                .toList();
     }
 
     @Override
@@ -94,13 +102,13 @@ public class MagazineServiceImplementation implements MagazineService {
         List<MagazineSubscription> listSubscriptions = magazineSubscriptionRepository.findByUser_Id(idUser);
 
         return listSubscriptions.stream()
-            .map(subscription -> {
-                Magazine magazine = subscription.getMagazine();
-                List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
-                List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
-                return new MagazineFindNormalResponse(magazine, tags, categories);
-            })
-            .toList();
+                .map(subscription -> {
+                    Magazine magazine = subscription.getMagazine();
+                    List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
+                    List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
+                    return new MagazineFindNormalResponse(magazine, tags, categories);
+                })
+                .toList();
     }
 
     @Override
@@ -109,12 +117,12 @@ public class MagazineServiceImplementation implements MagazineService {
         List<Magazine> magazines = magazineRepository.findByCategory_Id(idCategory);
 
         return magazines.stream()
-            .map(magazine -> {
-                List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
-                List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
-                return new MagazineFindNormalResponse(magazine, tags, categories);
-            })
-            .toList();
+                .map(magazine -> {
+                    List<MagazineTag> tags = magazineTagRepository.findByMagazine_Id(magazine.getId());
+                    List<MagazineCategory> categories = magazineCategoryRepository.findByMagazine_Id(magazine.getId());
+                    return new MagazineFindNormalResponse(magazine, tags, categories);
+                })
+                .toList();
     }
 
     @Override
@@ -122,33 +130,33 @@ public class MagazineServiceImplementation implements MagazineService {
         List<MagazineTag> magazineTags = magazineTagRepository.findByDetailIgnoreCase(tag);
 
         return magazineTags.stream()
-            .map(MagazineTag::getMagazine)
-            .distinct()
-            .map(magazine -> {
-                List<MagazineTag> tags =
-                        magazineTagRepository.findByMagazine_Id(magazine.getId());
+                .map(MagazineTag::getMagazine)
+                .distinct()
+                .map(magazine -> {
+                    List<MagazineTag> tags =
+                            magazineTagRepository.findByMagazine_Id(magazine.getId());
 
-                List<MagazineCategory> categories =
-                        magazineCategoryRepository.findByMagazine_Id(magazine.getId());
+                    List<MagazineCategory> categories =
+                            magazineCategoryRepository.findByMagazine_Id(magazine.getId());
 
-                return new MagazineFindNormalResponse(magazine, tags, categories);
-            })
-            .toList();
+                    return new MagazineFindNormalResponse(magazine, tags, categories);
+                })
+                .toList();
     }
 
     @Override
     public List<MagazineFindResponse> findAllEditor(Integer idUser) {
         return magazineRepository.findByUser_Id(idUser)
-            .stream()
-            .map(MagazineFindResponse::new)
-            .toList();
+                .stream()
+                .map(MagazineFindResponse::new)
+                .toList();
     }
 
     @Override
     public List<MagazineFindResponse> findAllAdmin() {
         return magazineRepository.findAll()
-            .stream()
-            .map(MagazineFindResponse::new)
-            .toList();
+                .stream()
+                .map(MagazineFindResponse::new)
+                .toList();
     }
 }

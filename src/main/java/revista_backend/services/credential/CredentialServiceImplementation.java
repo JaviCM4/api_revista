@@ -57,6 +57,26 @@ public class CredentialServiceImplementation implements CredentialService {
     }
 
     @Override
+    public void createAdmin(User user, String username, String correo) throws ConflictException {
+
+        if (credentialRepository.existsByUsername(username)) {
+            throw new ConflictException("Username '" + username + "' it's already registered. Please use another one.");
+        }
+
+        Credential credential = new Credential();
+        credential.setUser(user);
+        credential.setUsername(username);
+        credential.setPassword(null);
+
+        String token = java.util.UUID.randomUUID().toString();
+        credential.setTokenVerification(token);
+        credential.setVerificationEndDate(LocalDateTime.now().plusMinutes(5));
+
+        mailService.sendTokenEmail(correo, token, "firstLogin");
+        credentialRepository.save(credential);
+    }
+
+    @Override
     public JwtResponse getLoginResponse(CredentialResquest dto)
             throws ResourceNotFoundException, ValidationException {
         String token = "";
@@ -193,5 +213,3 @@ public class CredentialServiceImplementation implements CredentialService {
         mailService.sendTokenEmail(contact.getDetail(), token, "firstLogin");
     }
 }
-
-
