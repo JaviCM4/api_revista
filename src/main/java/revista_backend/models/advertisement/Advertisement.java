@@ -43,4 +43,5 @@ public class Advertisement {
 
     @Column(name = "fecha_vencimiento")
     private LocalDate expirationDate;
+
 }

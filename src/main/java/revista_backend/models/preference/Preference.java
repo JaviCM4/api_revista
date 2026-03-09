@@ -26,5 +26,4 @@ public class Preference {
     @JoinColumn(name = "categoria_preferencia_id")
     @JsonIgnore
     private PreferenceCategory preferenceCategory;
-
 }
