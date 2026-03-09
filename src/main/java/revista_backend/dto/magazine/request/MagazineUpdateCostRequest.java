@@ -19,4 +19,16 @@ public class MagazineUpdateCostRequest {
     @Min(1)
     Integer adBlockCost;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getDailyCost() {
+        return dailyCost;
+    }
+
+    public Integer getAdBlockCost() {
+        return adBlockCost;
+    }
+
 }

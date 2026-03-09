@@ -14,4 +14,7 @@ public class CredentialResquest {
     @NotBlank
     @Size(max = 75)
     String password;
+
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
 }

@@ -19,4 +19,20 @@ public class MagazineUpdatePermissionsRequest {
 
     @NotNull
     boolean allowReactions;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public boolean isAllowSubscription() {
+        return allowSubscription;
+    }
+
+    public boolean isAllowComments() {
+        return allowComments;
+    }
+
+    public boolean isAllowReactions() {
+        return allowReactions;
+    }
 }
