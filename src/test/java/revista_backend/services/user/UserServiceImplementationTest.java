@@ -7,10 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import revista_backend.dto.user.UserCreateRequest;
+import revista_backend.dto.user.UserCreateAdminRequest;
 import revista_backend.dto.user.UserFindResponse;
 import revista_backend.dto.user.UserUpdateRequest;
 import revista_backend.dto.user.UserUpdateResponse;
 import revista_backend.exceptions.ResourceNotFoundException;
+import revista_backend.exceptions.ValidationException;
 import revista_backend.models.location.Municipality;
 import revista_backend.models.status.UserStatus;
 import revista_backend.models.types.SexType;
@@ -200,6 +202,45 @@ public class UserServiceImplementationTest {
         assertEquals("Municipio no encontrado", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
+
+    @Test
+    void testCreateAdminUser() throws ResourceNotFoundException {
+        UserCreateAdminRequest adminRequest = new UserCreateAdminRequest(
+                3,
+                USER_STATUS_ID,
+                SEX_TYPE_ID,
+                MUNICIPALITY_ID,
+            "adminuser",
+                "admin_name",
+                "admin_lastname",
+                LocalDate.of(1995, 2, 10),
+                "img.png",
+                "admin desc",
+                44455566,
+            "admin@correo.com"
+        );
+
+        UserType userType = new UserType();
+        userType.setId(3);
+        UserStatus userStatus = new UserStatus();
+        userStatus.setId(USER_STATUS_ID);
+        SexType sexType = new SexType();
+        sexType.setId(SEX_TYPE_ID);
+        Municipality municipality = new Municipality();
+        municipality.setId(MUNICIPALITY_ID);
+
+        when(userTypeRepository.findById(3)).thenReturn(Optional.of(userType));
+        when(userStatusRepository.findById(USER_STATUS_ID)).thenReturn(Optional.of(userStatus));
+        when(sexTypeRepository.findById(SEX_TYPE_ID)).thenReturn(Optional.of(sexType));
+        when(municipalityRepository.findById(MUNICIPALITY_ID)).thenReturn(Optional.of(municipality));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        User result = userService.createAdmin(adminRequest);
+
+        assertNotNull(result);
+        assertEquals("admin_name", result.getNames());
+        assertEquals(3, result.getUserType().getId());
+    }
     
     @Test
     void testFindAll() {
@@ -278,7 +319,7 @@ public class UserServiceImplementationTest {
         when(userRepository.save(any(User.class))).thenReturn(existingUser);
 
         // Act
-        UserUpdateResponse result = userService.update(USER_ID, updateRequest);
+        UserUpdateResponse result = userService.update(updateRequest, USER_ID);
 
         // Assert
         verify(userRepository).findById(USER_ID);
@@ -294,7 +335,7 @@ public class UserServiceImplementationTest {
 
         // Act & Assert
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
-                () -> userService.update(USER_ID, updateRequest));
+                () -> userService.update(updateRequest, USER_ID));
         
         assertEquals("Usuario no encontrado", exception.getMessage());
         verify(userRepository).findById(USER_ID);
@@ -359,18 +400,82 @@ public class UserServiceImplementationTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
+    @Test
+    void testSuspendUserSuccess() throws ResourceNotFoundException {
+        User user = createUser(USER_ID);
+        UserStatus suspendedStatus = new UserStatus();
+        suspendedStatus.setId(2);
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(userStatusRepository.findById(2)).thenReturn(Optional.of(suspendedStatus));
+
+        userService.suspendUser(USER_ID);
+
+        assertEquals(suspendedStatus, user.getUserStatus());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void testSuspendUserWhenStatusNotFound() {
+        User user = createUser(USER_ID);
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(userStatusRepository.findById(2)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> userService.suspendUser(USER_ID));
+
+        assertEquals("Estado no encontrado", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateMoneySuccess() throws ResourceNotFoundException, ValidationException {
+        User user = createUser(USER_ID);
+        user.setAvailableMoney(100);
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+
+        userService.updateMoney(50, USER_ID);
+
+        assertEquals(150, user.getAvailableMoney());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void testUpdateMoneyWhenAmountIsInvalid() {
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> userService.updateMoney(-1, USER_ID));
+
+        assertEquals("The amount must be a positive integer.", exception.getMessage());
+        verify(userRepository, never()).findById(anyInt());
+    }
+
+    @Test
+    void testUpdateMoneyWhenUserNotFound() {
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> userService.updateMoney(100, USER_ID));
+
+        assertEquals("Usuario no encontrado", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
     private UserCreateRequest createUserRequest() {
         return new UserCreateRequest(
                 USER_STATUS_ID,
                 SEX_TYPE_ID,
                 MUNICIPALITY_ID,
-                "prueba",
+            "usuario_test",
                 "prueba",
                 "prueba",
                 LocalDate.of(2002, 12, 15),
                 "------",
                 "------",
-                "------"
+            5551234,
+            "correo@correo.com",
+            "Password1@"
         );
     }
 

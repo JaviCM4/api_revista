@@ -7,11 +7,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import revista_backend.dto.credential.CredentialResquest;
+import revista_backend.dto.credential.FirstLoginRequest;
 import revista_backend.dto.credential.RecoverPasswordRequest;
+import revista_backend.exceptions.ConflictException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
 import revista_backend.models.contact.Contact;
 import revista_backend.models.credential.Credential;
+import revista_backend.models.types.UserType;
 import revista_backend.models.user.User;
 import revista_backend.repositories.contact.ContactRepository;
 import revista_backend.repositories.credential.CredentialRepository;
@@ -56,6 +59,10 @@ public class CredentialServiceImplementationTest {
     void setup() {
         user = new User();
         user.setId(5);
+        UserType userType = new UserType();
+        userType.setId(10);
+        user.setUserType(userType);
+
         credential = new Credential();
         credential.setId(10);
         credential.setUsername("u1");
@@ -86,7 +93,7 @@ public class CredentialServiceImplementationTest {
 
         Contact contact = new Contact();
         contact.setDetail("test@example.com");
-        when(contactRepository.findByUser_IdAndContactType_Id(5, 2)).thenReturn(Optional.of(contact));
+        when(contactRepository.findByUser_IdAndContactType_Id(5, 1)).thenReturn(Optional.of(contact));
         when(credentialRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         service.getLoginResponse(req);
@@ -174,5 +181,126 @@ public class CredentialServiceImplementationTest {
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.verifyLoginToken(token));
         assertEquals("Expired Token", ex.getMessage());
+    }
+
+    @Test
+    void createStoresEncodedPassword() throws Exception {
+        User localUser = new User();
+        localUser.setId(9);
+        when(credentialRepository.existsByUsername("newUser")).thenReturn(false);
+        when(passwordEncoder.encode("pwd")).thenReturn("encodedPwd");
+
+        service.create(localUser, "newUser", "pwd");
+
+        verify(passwordEncoder).encode("pwd");
+        verify(credentialRepository).save(argThat(saved ->
+                saved.getUser().equals(localUser)
+                        && saved.getUsername().equals("newUser")
+                        && saved.getPassword().equals("encodedPwd")
+        ));
+    }
+
+    @Test
+    void createThrowsConflictWhenUsernameAlreadyExists() {
+        when(credentialRepository.existsByUsername("u1")).thenReturn(true);
+
+        ConflictException ex = assertThrows(ConflictException.class,
+                () -> service.create(user, "u1", "pwd"));
+
+        assertEquals("Username 'u1' it's already registered. Please use another one.", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+    }
+
+    @Test
+    void createAdminGeneratesTokenAndSendsEmail() throws Exception {
+        when(credentialRepository.existsByUsername("admin1")).thenReturn(false);
+
+        service.createAdmin(user, "admin1", "admin@test.com");
+
+        verify(mailService).sendTokenEmail(eq("admin@test.com"), anyString(), eq("firstLogin"));
+        verify(credentialRepository).save(argThat(saved ->
+                saved.getUsername().equals("admin1")
+                        && saved.getPassword() == null
+                        && saved.getTokenVerification() != null
+                        && saved.getVerificationEndDate() != null
+        ));
+    }
+
+    @Test
+    void loginThrowsValidationWhenPasswordIsInvalid() {
+        CredentialResquest req = new CredentialResquest("u1", "bad");
+        when(credentialRepository.findByUsername("u1")).thenReturn(Optional.of(credential));
+        when(passwordEncoder.matches("bad", "encoded")).thenReturn(false);
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.getLoginResponse(req));
+
+        assertEquals("Invalid credentials", ex.getMessage());
+    }
+
+    @Test
+    void verifyFirstLoginSucceeds() throws Exception {
+        credential.setTokenVerification("first-token");
+        credential.setVerificationEndDate(LocalDateTime.now().plusMinutes(2));
+        credential.setPassword(null);
+
+        when(credentialRepository.findBytokenVerification("first-token")).thenReturn(Optional.of(credential));
+        when(passwordEncoder.encode("pass1")).thenReturn("passEncoded");
+
+        service.verifyFirstLogin(new FirstLoginRequest("u1", "pass1", "first-token"));
+
+        assertEquals("passEncoded", credential.getPassword());
+        assertNull(credential.getTokenVerification());
+        assertNull(credential.getVerificationEndDate());
+        verify(credentialRepository).save(credential);
+    }
+
+    @Test
+    void verifyFirstLoginThrowsWhenUsernameDoesNotMatch() {
+        credential.setTokenVerification("first-token");
+        credential.setVerificationEndDate(LocalDateTime.now().plusMinutes(2));
+        credential.setPassword(null);
+
+        when(credentialRepository.findBytokenVerification("first-token")).thenReturn(Optional.of(credential));
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.verifyFirstLogin(new FirstLoginRequest("other", "pass1", "first-token")));
+
+        assertEquals("Incorrect username", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+    }
+
+    @Test
+    void sendLoginTokenSucceeds() throws Exception {
+        credential.setPassword("");
+        Contact contact = new Contact();
+        contact.setDetail("token@test.com");
+
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.of(credential));
+        when(contactRepository.findByUser_IdAndContactType_Id(5, 1)).thenReturn(Optional.of(contact));
+
+        service.sendLoginToken(5);
+
+        verify(credentialRepository).save(credential);
+        verify(mailService).sendTokenEmail(eq("token@test.com"), anyString(), eq("firstLogin"));
+        assertNotNull(credential.getTokenVerification());
+        assertNotNull(credential.getVerificationEndDate());
+    }
+
+    @Test
+    void sendLoginTokenThrowsConflictWhenUserAlreadyHasPassword() {
+        credential.setPassword("already-set");
+        Contact contact = new Contact();
+        contact.setDetail("token@test.com");
+
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.of(credential));
+        when(contactRepository.findByUser_IdAndContactType_Id(5, 1)).thenReturn(Optional.of(contact));
+
+        ConflictException ex = assertThrows(ConflictException.class,
+                () -> service.sendLoginToken(5));
+
+        assertEquals("This user has already logged in for the first time", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+        verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
     }
 }
