@@ -149,6 +149,54 @@ public class AdvertisementServiceImplementationTest {
     }
 
     @Test
+    void testCreateWhenUserNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        AdCreateRequest dto = new AdCreateRequest(1, List.of("img-1.png"), 200, LocalDate.now().plusDays(10));
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.create(dto, USER_ID));
+
+        assertEquals("User Not Found", exception.getMessage());
+        verify(advertisementRepository, never()).save(any(Advertisement.class));
+    }
+
+    @Test
+    void testCreateWhenAdTypeNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User user = createUser(USER_ID, 1000);
+        AdCreateRequest dto = new AdCreateRequest(1, List.of("img-1.png"), 200, LocalDate.now().plusDays(10));
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(adTypeRepository.findById(1)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.create(dto, USER_ID));
+
+        assertEquals("Type Advertisement Not Found", exception.getMessage());
+        verify(advertisementRepository, never()).save(any(Advertisement.class));
+    }
+
+    @Test
+    void testCreateWhenAdStatusNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User user = createUser(USER_ID, 1000);
+        AdType adType = createAdType(1, "Banner");
+        AdCreateRequest dto = new AdCreateRequest(1, List.of("img-1.png"), 200, LocalDate.now().plusDays(10));
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(adTypeRepository.findById(1)).thenReturn(Optional.of(adType));
+        when(adStatusRepository.findById(1)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.create(dto, USER_ID));
+
+        assertEquals("Status Advertisement Not Found", exception.getMessage());
+        verify(advertisementRepository, never()).save(any(Advertisement.class));
+    }
+
+    @Test
     void testCreateWhenExpirationDateIsNotFuture() {
         AdvertisementServiceImplementation spyService = spy(service);
 
@@ -186,6 +234,34 @@ public class AdvertisementServiceImplementationTest {
         AdCreateRequest dto = new AdCreateRequest(
                 1,
                 List.of(),
+                200,
+                LocalDate.now().plusDays(10)
+        );
+
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
+        when(adTypeRepository.findById(1)).thenReturn(Optional.of(adType));
+        when(adStatusRepository.findById(1)).thenReturn(Optional.of(adStatus));
+        when(advertisementRepository.save(any(Advertisement.class))).thenReturn(savedAd);
+
+        spyService.create(dto, USER_ID);
+
+        verify(userRepository).save(any(User.class));
+        verify(advertisementRepository).save(any(Advertisement.class));
+        verify(extraContentRepository, never()).save(any(ExtraContent.class));
+    }
+
+    @Test
+    void testCreateSuccessWithNullDetails() throws ResourceNotFoundException, ValidationException, MoneyException {
+        AdvertisementServiceImplementation spyService = spy(service);
+
+        User user = createUser(USER_ID, 1000);
+        AdType adType = createAdType(1, "Banner");
+        AdStatus adStatus = createAdStatus(1, "Activo");
+        Advertisement savedAd = createAdvertisement(AD_ID, user, adType, adStatus, 200, LocalDate.now().plusDays(10));
+
+        AdCreateRequest dto = new AdCreateRequest(
+                1,
+                null,
                 200,
                 LocalDate.now().plusDays(10)
         );
@@ -308,6 +384,120 @@ public class AdvertisementServiceImplementationTest {
     }
 
     @Test
+    void testBlockAdWhenMagazineNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now().plusDays(7));
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Magazine not found", exception.getMessage());
+        verify(advertisementRepository, never()).findById(any(Integer.class));
+    }
+
+    @Test
+    void testBlockAdWhenAdvertisementNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User owner = createUser(USER_ID, 500);
+        Magazine magazine = createMagazine(MAGAZINE_ID, owner, 120);
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now().plusDays(7));
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.of(magazine));
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Advertisement not found", exception.getMessage());
+        verify(userRepository, never()).findById(any(Integer.class));
+    }
+
+    @Test
+    void testBlockAdWhenOwnerUserNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User owner = createUser(USER_ID, 500);
+        Magazine magazine = createMagazine(MAGAZINE_ID, owner, 120);
+        Advertisement advertisement = createAdvertisement(AD_ID, owner, createAdType(1, "Banner"), createAdStatus(1, "Activo"), 100, LocalDate.now().plusDays(5));
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now().plusDays(7));
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.of(magazine));
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.of(advertisement));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Owner user not found", exception.getMessage());
+        verify(adLockStatusRepository, never()).findById(any(Integer.class));
+    }
+
+    @Test
+    void testBlockAdWhenAdLockStatusNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User owner = createUser(USER_ID, 500);
+        Magazine magazine = createMagazine(MAGAZINE_ID, owner, 120);
+        Advertisement advertisement = createAdvertisement(AD_ID, owner, createAdType(1, "Banner"), createAdStatus(1, "Activo"), 100, LocalDate.now().plusDays(5));
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now().plusDays(7));
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.of(magazine));
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.of(advertisement));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
+        when(adLockStatusRepository.findById(1)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Ad lock status not found", exception.getMessage());
+        verify(adStatusRepository, never()).findById(any(Integer.class));
+    }
+
+    @Test
+    void testBlockAdWhenExpirationDateIsNotFuture() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User owner = createUser(USER_ID, 500);
+        Magazine magazine = createMagazine(MAGAZINE_ID, owner, 120);
+        Advertisement advertisement = createAdvertisement(AD_ID, owner, createAdType(1, "Banner"), createAdStatus(1, "Activo"), 100, LocalDate.now().plusDays(5));
+        AdLockStatus lockStatus = createAdLockStatus(1, "Activo");
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now());
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.of(magazine));
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.of(advertisement));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
+        when(adLockStatusRepository.findById(1)).thenReturn(Optional.of(lockStatus));
+
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Expiration Date must be future", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+        verify(advertisementRepository, never()).save(any(Advertisement.class));
+    }
+
+    @Test
+    void testBlockAdWhenAdStatusNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User owner = createUser(USER_ID, 500);
+        Magazine magazine = createMagazine(MAGAZINE_ID, owner, 120);
+        Advertisement advertisement = createAdvertisement(AD_ID, owner, createAdType(1, "Banner"), createAdStatus(1, "Activo"), 100, LocalDate.now().plusDays(5));
+        AdLockStatus lockStatus = createAdLockStatus(1, "Activo");
+        AdBlockCreateRequest dto = new AdBlockCreateRequest(MAGAZINE_ID, AD_ID, 120, LocalDate.now().plusDays(7));
+
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.of(magazine));
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.of(advertisement));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
+        when(adLockStatusRepository.findById(1)).thenReturn(Optional.of(lockStatus));
+        when(adStatusRepository.findById(2)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.blockAd(dto, USER_ID));
+
+        assertEquals("Ad status not found", exception.getMessage());
+        verify(adBlockRepository, never()).save(any(AdBlock.class));
+    }
+
+    @Test
     void testDisableAdSuccess() throws ResourceNotFoundException {
         AdvertisementServiceImplementation spyService = spy(service);
 
@@ -333,6 +523,22 @@ public class AdvertisementServiceImplementationTest {
 
         assertEquals("Advertisement not found", exception.getMessage());
         verify(adStatusRepository, never()).findById(any(Integer.class));
+    }
+
+    @Test
+    void testDisableAdWhenStatusNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        User user = createUser(USER_ID, 500);
+        Advertisement advertisement = createAdvertisement(AD_ID, user, createAdType(1, "Banner"), createAdStatus(1, "Activo"), 100, LocalDate.now().plusDays(5));
+
+        when(advertisementRepository.findById(AD_ID)).thenReturn(Optional.of(advertisement));
+        when(adStatusRepository.findById(2)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.disableAd(AD_ID));
+
+        assertEquals("Ad status not found", exception.getMessage());
+        verify(advertisementRepository, never()).save(any(Advertisement.class));
     }
 
     @Test
@@ -383,6 +589,17 @@ public class AdvertisementServiceImplementationTest {
 
         assertEquals(150, result);
         verify(magazineRepository).findById(MAGAZINE_ID);
+    }
+
+    @Test
+    void testGetBlockCostByMagazineWhenMagazineNotFound() {
+        AdvertisementServiceImplementation spyService = spy(service);
+        when(magazineRepository.findById(MAGAZINE_ID)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> spyService.getBlockCostByMagazine(MAGAZINE_ID));
+
+        assertEquals("Magazine not found", exception.getMessage());
     }
 
     @Test
