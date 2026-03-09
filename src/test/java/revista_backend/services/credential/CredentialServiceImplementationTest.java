@@ -157,6 +157,22 @@ public class CredentialServiceImplementationTest {
     }
 
     @Test
+    void verifyPasswordSucceedsWhenRecoveryEndDateIsNull() throws Exception {
+        String token = "tok-null-date";
+        credential.setTokenRecovery(token);
+        credential.setRecoveryEndDate(null);
+        when(credentialRepository.findByTokenRecovery(token)).thenReturn(Optional.of(credential));
+        when(passwordEncoder.encode("new")).thenReturn("newEncoded");
+
+        service.verifyPassword(new RecoverPasswordRequest(token, "new"));
+
+        assertEquals("newEncoded", credential.getPassword());
+        assertNull(credential.getTokenRecovery());
+        assertNull(credential.getRecoveryEndDate());
+        verify(credentialRepository).save(credential);
+    }
+
+    @Test
     void verifyLoginTokenReturnsJwt() throws Exception {
         String token = "vtok";
         credential.setTokenVerification(token);
@@ -181,6 +197,22 @@ public class CredentialServiceImplementationTest {
         ValidationException ex = assertThrows(ValidationException.class,
                 () -> service.verifyLoginToken(token));
         assertEquals("Expired Token", ex.getMessage());
+    }
+
+    @Test
+    void verifyLoginTokenSucceedsWhenVerificationEndDateIsNull() throws Exception {
+        String token = "vtok-null-date";
+        credential.setTokenVerification(token);
+        credential.setVerificationEndDate(null);
+        when(credentialRepository.findBytokenVerification(token)).thenReturn(Optional.of(credential));
+        when(jwtUtil.generateToken("u1", 10)).thenReturn("jwt-null-date");
+
+        var response = service.verifyLoginToken(token);
+
+        assertEquals("jwt-null-date", response.getToken());
+        assertNull(credential.getTokenVerification());
+        assertNull(credential.getVerificationEndDate());
+        verify(credentialRepository).save(credential);
     }
 
     @Test
@@ -227,6 +259,18 @@ public class CredentialServiceImplementationTest {
     }
 
     @Test
+    void createAdminThrowsConflictWhenUsernameAlreadyExists() {
+        when(credentialRepository.existsByUsername("admin1")).thenReturn(true);
+
+        ConflictException ex = assertThrows(ConflictException.class,
+                () -> service.createAdmin(user, "admin1", "admin@test.com"));
+
+        assertEquals("Username 'admin1' it's already registered. Please use another one.", ex.getMessage());
+        verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
+        verify(credentialRepository, never()).save(any(Credential.class));
+    }
+
+    @Test
     void loginThrowsValidationWhenPasswordIsInvalid() {
         CredentialResquest req = new CredentialResquest("u1", "bad");
         when(credentialRepository.findByUsername("u1")).thenReturn(Optional.of(credential));
@@ -236,6 +280,32 @@ public class CredentialServiceImplementationTest {
                 () -> service.getLoginResponse(req));
 
         assertEquals("Invalid credentials", ex.getMessage());
+    }
+
+    @Test
+    void loginThrowsWhenUserNotFound() {
+        CredentialResquest req = new CredentialResquest("ghost", "pwd");
+        when(credentialRepository.findByUsername("ghost")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.getLoginResponse(req));
+
+        assertEquals("User not found", ex.getMessage());
+    }
+
+    @Test
+    void loginWithActiveVerificationThrowsWhenEmailContactNotFound() {
+        CredentialResquest req = new CredentialResquest("u1", "pwd");
+        credential.setActiveVerification(true);
+        when(credentialRepository.findByUsername("u1")).thenReturn(Optional.of(credential));
+        when(passwordEncoder.matches("pwd", "encoded")).thenReturn(true);
+        when(contactRepository.findByUser_IdAndContactType_Id(5, 1)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.getLoginResponse(req));
+
+        assertEquals("Email contact not found", ex.getMessage());
+        verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -253,6 +323,125 @@ public class CredentialServiceImplementationTest {
         assertNull(credential.getTokenVerification());
         assertNull(credential.getVerificationEndDate());
         verify(credentialRepository).save(credential);
+    }
+
+    @Test
+    void updateActiveVerificationThrowsWhenUserNotFound() {
+        when(userRepository.findById(5)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.updateActiveVerification(5));
+
+        assertEquals("User not found", ex.getMessage());
+    }
+
+    @Test
+    void updateActiveVerificationThrowsWhenCredentialNotFound() {
+        when(userRepository.findById(5)).thenReturn(Optional.of(user));
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.updateActiveVerification(5));
+
+        assertEquals("Credential not found", ex.getMessage());
+    }
+
+    @Test
+    void recoverPasswordThrowsWhenContactNotFound() {
+        when(contactRepository.findByDetail("none@mail.com")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.recoverPassword("none@mail.com"));
+
+        assertEquals("Contact not found", ex.getMessage());
+    }
+
+    @Test
+    void recoverPasswordThrowsWhenCredentialNotFound() {
+        Contact contact = new Contact();
+        contact.setUser(user);
+        contact.setDetail("mail@d.com");
+        when(contactRepository.findByDetail("mail@d.com")).thenReturn(Optional.of(contact));
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.recoverPassword("mail@d.com"));
+
+        assertEquals("Credential not found", ex.getMessage());
+        verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void verifyPasswordThrowsWhenCredentialNotFound() {
+        when(credentialRepository.findByTokenRecovery("bad-token")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.verifyPassword(new RecoverPasswordRequest("bad-token", "new")));
+
+        assertEquals("Credential not found", ex.getMessage());
+    }
+
+    @Test
+    void verifyLoginTokenThrowsWhenCredentialNotFound() {
+        when(credentialRepository.findBytokenVerification("bad-token")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.verifyLoginToken("bad-token"));
+
+        assertEquals("Credential not found", ex.getMessage());
+    }
+
+    @Test
+    void verifyFirstLoginThrowsWhenTokenExpired() {
+        credential.setTokenVerification("expired-first-token");
+        credential.setVerificationEndDate(LocalDateTime.now().minusMinutes(1));
+        when(credentialRepository.findBytokenVerification("expired-first-token")).thenReturn(Optional.of(credential));
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.verifyFirstLogin(new FirstLoginRequest("u1", "pass1", "expired-first-token")));
+
+        assertEquals("Expired Token", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+    }
+
+    @Test
+    void verifyFirstLoginSucceedsWhenVerificationEndDateIsNull() throws Exception {
+        credential.setTokenVerification("first-null-date");
+        credential.setVerificationEndDate(null);
+        credential.setPassword(null);
+        when(credentialRepository.findBytokenVerification("first-null-date")).thenReturn(Optional.of(credential));
+        when(passwordEncoder.encode("pass1")).thenReturn("passEncodedNullDate");
+
+        service.verifyFirstLogin(new FirstLoginRequest("u1", "pass1", "first-null-date"));
+
+        assertEquals("passEncodedNullDate", credential.getPassword());
+        assertNull(credential.getTokenVerification());
+        assertNull(credential.getVerificationEndDate());
+        verify(credentialRepository).save(credential);
+    }
+
+    @Test
+    void verifyFirstLoginThrowsWhenNotFirstLogin() {
+        credential.setTokenVerification("token-used");
+        credential.setVerificationEndDate(LocalDateTime.now().plusMinutes(2));
+        credential.setPassword("already");
+        when(credentialRepository.findBytokenVerification("token-used")).thenReturn(Optional.of(credential));
+
+        ValidationException ex = assertThrows(ValidationException.class,
+                () -> service.verifyFirstLogin(new FirstLoginRequest("u1", "pass1", "token-used")));
+
+        assertEquals("This is not your first login", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+    }
+
+    @Test
+    void verifyFirstLoginThrowsWhenCredentialNotFound() {
+        when(credentialRepository.findBytokenVerification("missing-first-token")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.verifyFirstLogin(new FirstLoginRequest("u1", "pass1", "missing-first-token")));
+
+        assertEquals("Credential not found", ex.getMessage());
     }
 
     @Test
@@ -300,6 +489,31 @@ public class CredentialServiceImplementationTest {
                 () -> service.sendLoginToken(5));
 
         assertEquals("This user has already logged in for the first time", ex.getMessage());
+        verify(credentialRepository, never()).save(any(Credential.class));
+        verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    void sendLoginTokenThrowsWhenCredentialNotFound() {
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.sendLoginToken(5));
+
+        assertEquals("Credential not found", ex.getMessage());
+        verify(contactRepository, never()).findByUser_IdAndContactType_Id(anyInt(), anyInt());
+    }
+
+    @Test
+    void sendLoginTokenThrowsWhenContactNotFound() {
+        credential.setPassword("");
+        when(credentialRepository.findByUser_Id(5)).thenReturn(Optional.of(credential));
+        when(contactRepository.findByUser_IdAndContactType_Id(5, 1)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class,
+                () -> service.sendLoginToken(5));
+
+        assertEquals("Credential not found", ex.getMessage());
         verify(credentialRepository, never()).save(any(Credential.class));
         verify(mailService, never()).sendTokenEmail(anyString(), anyString(), anyString());
     }
