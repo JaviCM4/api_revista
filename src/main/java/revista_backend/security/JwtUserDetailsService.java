@@ -29,12 +29,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         Credential cred = credentialRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        /*
-         * El rol se almacena en la entidad usuario relacionada a la credencial.  
-         * UserType.nombre contiene valores como "Administrador", "Editor", etc.
-         * Convertimos ese nombre en una autoridad de Spring.  
-         * Si no encontramos el tipo (no debería ocurrir) damos un rol genérico.
-         */
         Collection<GrantedAuthority> authorities;
         if (cred.getUser() != null && cred.getUser().getUserType() != null) {
             String roleName = cred.getUser().getUserType().getName();
