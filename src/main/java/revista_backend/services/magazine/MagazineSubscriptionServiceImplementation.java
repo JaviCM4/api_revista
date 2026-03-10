@@ -2,6 +2,7 @@ package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.magazine.request.SubscriptionCreateRequest;
 import revista_backend.exceptions.ConflictException;
 import revista_backend.exceptions.ResourceNotFoundException;
@@ -16,6 +17,7 @@ import revista_backend.repositories.user.UserRepository;
 import revista_backend.services.magazine.interfaces.MagazineSubscriptionService;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MagazineSubscriptionServiceImplementation implements MagazineSubscriptionService {
 
     private final MagazineSubscriptionRepository magazineSubscriptionRepository;

@@ -2,6 +2,7 @@ package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.magazine.request.InteractionCommentRequest;
 import revista_backend.dto.magazine.response.CommentsResponse;
 import revista_backend.exceptions.ResourceNotFoundException;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MagazineInteractionServiceImplementation implements MagazineInteractionService {
 
     private final MagazineRepository magazineRepository;

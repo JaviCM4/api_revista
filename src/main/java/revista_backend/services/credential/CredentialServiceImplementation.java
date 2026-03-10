@@ -3,6 +3,7 @@ package revista_backend.services.credential;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.credential.CredentialResquest;
 import revista_backend.dto.credential.FirstLoginRequest;
 import revista_backend.dto.credential.JwtResponse;
@@ -22,6 +23,7 @@ import revista_backend.services.mail.MailService;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class CredentialServiceImplementation implements CredentialService {
 
     private final CredentialRepository credentialRepository;

@@ -2,6 +2,7 @@ package revista_backend.services.cost;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.cost.SuggestedCostCreateResquest;
 import revista_backend.dto.cost.SuggestedCostResponse;
 import revista_backend.exceptions.ConflictException;
@@ -12,6 +13,7 @@ import revista_backend.repositories.cost.SuggestedCostRepository;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SuggestedCostServiceImplementation implements SuggestedCostService {
 
     private final SuggestedCostRepository suggestedCostRepository;

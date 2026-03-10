@@ -14,6 +14,7 @@ import revista_backend.services.credential.CredentialServiceImplementation;
 import revista_backend.services.user.UserServiceImplementation;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class OrchestratorUserCredentialServiceImplementation implements OrchestratorUserCredentialService {
 
     private final UserServiceImplementation userServiceImplementation;
@@ -28,7 +29,6 @@ public class OrchestratorUserCredentialServiceImplementation implements Orchestr
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public UserCreateResponse createUserWithCredential(UserCreateRequest dto)
             throws ConflictException, ResourceNotFoundException {
         User newUser = userServiceImplementation.create(dto);

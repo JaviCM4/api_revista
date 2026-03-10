@@ -2,6 +2,7 @@ package revista_backend.services.reports;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.reports.common.AdBlockReport;
 import revista_backend.dto.reports.five.*;
 import revista_backend.dto.reports.four.*;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ReportServiceImplementation implements ReportService {
 
     private final InteractionCommentRepository interactionCommentRepository;

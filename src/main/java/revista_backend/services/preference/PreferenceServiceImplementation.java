@@ -2,6 +2,7 @@ package revista_backend.services.preference;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.preference.PreferenceFindResponse;
 import revista_backend.exceptions.AccessDeniedException;
 import revista_backend.exceptions.ConflictException;
@@ -16,6 +17,7 @@ import revista_backend.repositories.user.UserRepository;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PreferenceServiceImplementation implements PreferenceService {
 
     private final PreferenceRepository preferenceRepository;

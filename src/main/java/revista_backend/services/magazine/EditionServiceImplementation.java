@@ -2,6 +2,7 @@ package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.magazine.request.EditionCreateRequest;
 import revista_backend.dto.magazine.response.EditionFindResponse;
 import revista_backend.dto.magazine.response.EditionResponse;
@@ -14,6 +15,7 @@ import revista_backend.repositories.magazine.MagazineRepository;
 import revista_backend.services.magazine.interfaces.EditionService;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class EditionServiceImplementation implements EditionService {
 
     private final MagazineRepository magazineRepository;

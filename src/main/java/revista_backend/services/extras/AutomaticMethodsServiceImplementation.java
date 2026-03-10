@@ -3,6 +3,7 @@ package revista_backend.services.extras;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.models.advertisement.AdBlock;
 import revista_backend.models.advertisement.Advertisement;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AutomaticMethodsServiceImplementation implements AutomaticMethodsService {
 
     private final AdvertisementRepository advertisementRepository;

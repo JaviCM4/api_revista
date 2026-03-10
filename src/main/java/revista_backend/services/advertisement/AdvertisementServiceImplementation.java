@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class AdvertisementServiceImplementation implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;

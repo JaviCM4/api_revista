@@ -2,12 +2,14 @@ package revista_backend.services.categories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.models.types.MagazineCategoryType;
 import revista_backend.repositories.types.MagazineCategoryTypeRepository;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class MagazineCategoryTypeServiceImplementation implements MagazineCategoryTypeService {
 
     private final MagazineCategoryTypeRepository magazineCategoryTypeRepository;

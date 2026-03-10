@@ -2,6 +2,7 @@ package revista_backend.services.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.user.*;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.exceptions.ValidationException;
@@ -19,6 +20,7 @@ import revista_backend.repositories.user.UserRepository;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;

@@ -1,6 +1,7 @@
 package revista_backend.services.contact;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.exceptions.ConflictException;
 import revista_backend.exceptions.ResourceNotFoundException;
 import revista_backend.models.contact.Contact;
@@ -10,6 +11,7 @@ import revista_backend.repositories.contact.ContactRepository;
 import revista_backend.repositories.types.ContactTypeRepository;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ContactServiceImplementation implements ContactService {
 
     private final ContactTypeRepository contactTypeRepository;

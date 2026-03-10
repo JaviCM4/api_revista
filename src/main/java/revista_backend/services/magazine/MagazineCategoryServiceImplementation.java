@@ -2,6 +2,7 @@ package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.magazine.request.MagazineCategoryCreateRequest;
 import revista_backend.dto.magazine.response.MagazineCategoryResponse;
 import revista_backend.exceptions.AccessDeniedException;
@@ -18,6 +19,7 @@ import revista_backend.services.magazine.interfaces.MagazineCategoryService;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MagazineCategoryServiceImplementation implements MagazineCategoryService {
 
     private final MagazineCategoryRepository magazineCategoryRepository;

@@ -2,6 +2,7 @@ package revista_backend.services.magazine;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import revista_backend.dto.magazine.request.MagazineCreateRequest;
 import revista_backend.dto.magazine.request.MagazineUpdateCostRequest;
 import revista_backend.dto.magazine.request.MagazineUpdatePermissionsRequest;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MagazineServiceImplementation implements MagazineService {
 
     private final MagazineRepository magazineRepository;
