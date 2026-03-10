@@ -9,6 +9,6 @@ CREATE TABLE revista (
     revista_activa BOOLEAN NOT NULL,
     costo_dia INT NOT NULL,
     costo_bloqueo_anuncio INT NOT NULL,
-    fecha_creacion DATETIME NOT NULL,
+    fecha_creacion DATE NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;

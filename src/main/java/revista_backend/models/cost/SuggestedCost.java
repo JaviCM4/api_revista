@@ -1,10 +1,8 @@
 package revista_backend.models.cost;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import revista_backend.models.types.CostType;
 
 @Entity
 @Table(name = "costo_sugerido")

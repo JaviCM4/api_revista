@@ -4,8 +4,8 @@ CREATE TABLE anuncio (
     tipo_anuncio_id INT NOT NULL,
     estado_anuncio_id INT NOT NULL,
     costo_total INT NOT NULL,
-    fecha_creacion DATETIME NOT NULL,
-    fecha_vencimiento DATETIME NOT NULL,
+    fecha_creacion DATE NOT NULL,
+    fecha_vencimiento DATE NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (tipo_anuncio_id) REFERENCES tipo_anuncio(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (estado_anuncio_id) REFERENCES estado_anuncio(id) ON DELETE RESTRICT ON UPDATE CASCADE

@@ -83,7 +83,18 @@ INSERT INTO usuario (tipo_usuario_id, estado_usuario_id, tipo_sexo_id, municipio
     (4, 1, 1, 1, 'Fernando', 'Castillo Ramos', '1980-03-25', 'https://randomuser.me/api/portraits/men/7.jpg', 'Empresario dueño de tienda de tecnología.', 2000),
     (4, 1, 2, 2, 'Gabriela', 'Lima Ortega', '1984-07-19', 'https://randomuser.me/api/portraits/women/7.jpg', 'Propietaria de boutique de moda.', 1500),
     (4, 1, 1, 3, 'Ricardo', 'Solano Barrios', '1978-11-04', 'https://randomuser.me/api/portraits/men/8.jpg', 'Gerente de marketing digital.', 3000),
-    (4, 1, 2, 47, 'Mariana', 'Fuentes Aguilar', '1987-06-15', 'https://randomuser.me/api/portraits/women/8.jpg', 'Representante de agencia de viajes. Cuenta inactiva.', 0);
+    (4, 1, 2, 47, 'Mariana', 'Fuentes Aguilar', '1987-06-15', 'https://randomuser.me/api/portraits/women/8.jpg', 'Representante de agencia de viajes. Cuenta inactiva.', 0),
+
+    -- NUEVOS EDITORES
+    (2, 1, 1, 18, 'Diego Alejandro', 'Paredes Arana', '1991-06-27', 'https://randomuser.me/api/portraits/men/31.jpg', 'Editor de contenido educativo y negocios.', 650),
+
+    -- NUEVOS SUSCRIPTORES
+    (3, 1, 2, 21, 'Daniela Fernanda', 'Estrada Cifuentes', '2000-01-16', 'https://randomuser.me/api/portraits/women/31.jpg', 'Lectora frecuente de revistas académicas.', 120),
+    (3, 1, 1, 35, 'Miguel Angel', 'Santos Giron', '1996-11-08', 'https://randomuser.me/api/portraits/men/32.jpg', 'Interesado en tecnología y economía.', 95),
+    (3, 1, 2, 14, 'Paula Andrea', 'Roldan Mazariegos', '1998-04-02', 'https://randomuser.me/api/portraits/women/32.jpg', 'Suscriptora de contenido de salud y ciencia.', 80),
+
+    -- NUEVO ANUNCIANTE
+    (4, 1, 1, 26, 'Esteban', 'Maldonado Ruiz', '1989-09-09', 'https://randomuser.me/api/portraits/men/33.jpg', 'Anunciante de plataforma de cursos en linea.', 2600);
 
 
 -- -------------------------------------------------------------
@@ -105,7 +116,12 @@ INSERT INTO credencial (usuario_id, username, password) VALUES
     (12, 'anunc.uno',      '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
     (13, 'anunc.dos',      '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
     (14, 'anunc.tres',     '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
-    (15, 'anunc.cuatro',   '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6');
+    (15, 'anunc.cuatro',   '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
+    (16, 'editor.cinco',   '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
+    (17, 'suscrip.seis',   '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
+    (18, 'suscrip.siete',  '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
+    (19, 'suscrip.ocho',   '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6'),
+    (20, 'anunc.cinco',    '$2a$10$7jHGGPU1WgbYHiip56DfBeBoDQCXJpz9u.SKq2TRL.E5CfWHWC/h6');
 
 
 -- -------------------------------------------------------------
@@ -124,7 +140,17 @@ INSERT INTO contacto (usuario_id, tipo_contacto_id, detalle) VALUES
     (8, 1, 'gabriela.lima@boutiquemoda.gt'),
     (8, 2, '23456789'),
     (12, 1, 'javic4m@gmail.com'),
-    (12, 2, '12345678');
+    (12, 2, '12345678'),
+    (16, 1, 'diego.paredes@editorial.gt'),
+    (16, 2, '53124567'),
+    (17, 1, 'daniela.estrada@correo.gt'),
+    (17, 2, '56473829'),
+    (18, 1, 'miguel.santos@correo.gt'),
+    (18, 2, '59874612'),
+    (19, 1, 'paula.roldan@correo.gt'),
+    (19, 2, '51239874'),
+    (20, 1, 'esteban.maldonado@anuncios.gt'),
+    (20, 2, '57771234');
 
 
 -- -------------------------------------------------------------
@@ -166,12 +192,14 @@ INSERT INTO preferencia (usuario_id, categoria_preferencia_id) VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO revista (usuario_id, titulo, descripcion, permitir_suscripcion, permitir_comentarios, permitir_reacciones, revista_activa, costo_dia, costo_bloqueo_anuncio, fecha_creacion) VALUES
-    (3, 'Tech Monthly', 'La revista mensual de tecnología más completa de Centroamérica.', TRUE, TRUE, TRUE, TRUE, 8, 5, '2025-01-10 00:00:00'),
-    (3, 'Gadget World', 'Todo sobre los últimos gadgets y dispositivos del mercado.', TRUE, TRUE, TRUE, FALSE, 6, 4, '2025-03-05 00:00:00'),
-    (4, 'Science Today', 'Noticias y avances científicos al alcance de todos.', TRUE, TRUE, TRUE, TRUE, 7, 4, '2025-02-14 00:00:00'),
-    (4, 'Bio & Nature', 'Explorando la biología y el mundo natural.', TRUE, FALSE, TRUE, FALSE, 5, 3, '2025-05-20 00:00:00'),
-    (5, 'Deporte Total', 'Todo sobre fútbol, baloncesto y más deportes.', TRUE, TRUE, TRUE, TRUE, 9, 6, '2025-01-25 00:00:00'),
-    (5, 'Fitness Pro', 'Guías de entrenamiento y vida saludable para atletas.', TRUE, TRUE, FALSE, TRUE, 6, 4, '2025-04-10 00:00:00');
+    (3, 'Tech Monthly', 'La revista mensual de tecnología más completa de Centroamérica.', TRUE, TRUE, TRUE, TRUE, 8, 5, DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY)),
+    (3, 'Gadget World', 'Todo sobre los últimos gadgets y dispositivos del mercado.', TRUE, TRUE, TRUE, FALSE, 6, 4, DATE_SUB(CURRENT_DATE, INTERVAL 70 DAY)),
+    (4, 'Science Today', 'Noticias y avances científicos al alcance de todos.', TRUE, TRUE, TRUE, TRUE, 7, 4, DATE_SUB(CURRENT_DATE, INTERVAL 84 DAY)),
+    (4, 'Bio & Nature', 'Explorando la biología y el mundo natural.', TRUE, FALSE, TRUE, FALSE, 5, 3, DATE_SUB(CURRENT_DATE, INTERVAL 58 DAY)),
+    (5, 'Deporte Total', 'Todo sobre fútbol, baloncesto y más deportes.', TRUE, TRUE, TRUE, TRUE, 9, 6, DATE_SUB(CURRENT_DATE, INTERVAL 80 DAY)),
+    (5, 'Fitness Pro', 'Guías de entrenamiento y vida saludable para atletas.', TRUE, TRUE, FALSE, TRUE, 6, 4, DATE_SUB(CURRENT_DATE, INTERVAL 50 DAY)),
+    (16, 'Educa Futuro', 'Contenido para aprendizaje continuo, tendencias educativas y herramientas docentes.', TRUE, TRUE, TRUE, TRUE, 7, 5, DATE_SUB(CURRENT_DATE, INTERVAL 18 DAY)),
+    (16, 'Mercado Creativo', 'Ideas para emprendimiento, marketing y economia creativa en la region.', TRUE, TRUE, TRUE, TRUE, 8, 5, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY));
 
 
 -- -------------------------------------------------------------
@@ -186,7 +214,11 @@ INSERT INTO categoria_revista (revista_id, tipo_categoria_revista_id) VALUES
     (4, 7),
     (5, 3),
     (6, 3),
-    (6, 7);
+    (6, 7),
+    (7, 8),
+    (7, 6),
+    (8, 6),
+    (8, 9);
 
 
 -- -------------------------------------------------------------
@@ -206,7 +238,11 @@ INSERT INTO etiqueta_revista (revista_id, detalle) VALUES
     (5, 'futbol'),
     (5, 'deportes'),
     (6, 'fitness'),
-    (6, 'entrenamiento');
+    (6, 'entrenamiento'),
+    (7, 'educacion-digital'),
+    (7, 'aprendizaje-continuo'),
+    (8, 'emprendimiento'),
+    (8, 'marketing');
 
 
 -- -------------------------------------------------------------
@@ -214,30 +250,40 @@ INSERT INTO etiqueta_revista (revista_id, detalle) VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO edicion (revista_id, recurso, fecha_creacion) VALUES
-    (1, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf',  '2025-01-15 00:00:00'),
-    (1, 'https://portal.ct.gov/sitecore-center/-/media/sitecore-center/digital-training-center/sample-pdf-for-the-media-library-2.pdf',  '2025-02-15 00:00:00'),
-    (1, 'https://secretariat.goa.gov.in/PDFs/sample.pdf',  '2025-03-15 00:00:00'),
-    (2, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf',  '2025-03-10 00:00:00'),
-    (3, 'https://sofibanque.com/wp-content/uploads/2018/10/pdf_link_testing.pdf', '2025-02-20 00:00:00'),
-    (3, 'https://portal.ct.gov/-/media/Departments-and-Agencies/DPH/dph/environmental_health/2018-UPLOADS/TESTING-URL-LINK-INSERTS.pdf', '2025-03-20 00:00:00'),
-    (5, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf', '2025-02-01 00:00:00'),
-    (5, 'https://secretariat.goa.gov.in/PDFs/sample.pdf', '2025-03-01 00:00:00'),
-    (6, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf', '2025-04-15 00:00:00');
+    (1, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf',  DATE_SUB(CURRENT_DATE, INTERVAL 85 DAY)),
+    (1, 'https://portal.ct.gov/sitecore-center/-/media/sitecore-center/digital-training-center/sample-pdf-for-the-media-library-2.pdf',  DATE_SUB(CURRENT_DATE, INTERVAL 55 DAY)),
+    (1, 'https://secretariat.goa.gov.in/PDFs/sample.pdf',  DATE_SUB(CURRENT_DATE, INTERVAL 25 DAY)),
+    (2, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf',  DATE_SUB(CURRENT_DATE, INTERVAL 65 DAY)),
+    (3, 'https://sofibanque.com/wp-content/uploads/2018/10/pdf_link_testing.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 78 DAY)),
+    (3, 'https://portal.ct.gov/-/media/Departments-and-Agencies/DPH/dph/environmental_health/2018-UPLOADS/TESTING-URL-LINK-INSERTS.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 48 DAY)),
+    (5, 'https://www.nih.am/assets/pdf/dhs/1b159e277e4c6aeb24d03d1e3df945c2.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 74 DAY)),
+    (5, 'https://secretariat.goa.gov.in/PDFs/sample.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 44 DAY)),
+    (6, 'https://nativetheme.com/classic/wp-content/uploads/sites/6/2014/03/sample-pdf-3.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 45 DAY)),
+    (7, 'https://www.africau.edu/images/default/sample.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 16 DAY)),
+    (7, 'https://www.clickdimensions.com/links/TestPDFfile.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY)),
+    (8, 'https://www.orimi.com/pdf-test.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)),
+    (8, 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', DATE_SUB(CURRENT_DATE, INTERVAL 2 DAY));
 
 -- -------------------------------------------------------------
 --  SUSCRIPCIONES
 -- -------------------------------------------------------------
 
 INSERT INTO suscripcion_revista (revista_id, usuario_id, fecha_suscripcion) VALUES
-    (1,  7,  '2025-01-20 10:00:00'),
-    (1,  8,  '2025-01-22 11:00:00'),
-    (1,  10, '2025-02-01 09:00:00'),
-    (3,  8,  '2025-02-18 08:00:00'),
-    (3,  9,  '2025-03-01 10:00:00'),
-    (5,  7,  '2025-02-05 19:00:00'),
-    (5,  10, '2025-02-10 20:00:00'),
-    (6,  9,  '2025-04-20 09:00:00'),
-    (6,  10, '2025-04-22 10:00:00');
+    (1,  7,  DATE_SUB(CURRENT_DATE, INTERVAL 80 DAY)),
+    (1,  8,  DATE_SUB(CURRENT_DATE, INTERVAL 78 DAY)),
+    (1,  10, DATE_SUB(CURRENT_DATE, INTERVAL 68 DAY)),
+    (3,  8,  DATE_SUB(CURRENT_DATE, INTERVAL 76 DAY)),
+    (3,  9,  DATE_SUB(CURRENT_DATE, INTERVAL 65 DAY)),
+    (5,  7,  DATE_SUB(CURRENT_DATE, INTERVAL 72 DAY)),
+    (5,  10, DATE_SUB(CURRENT_DATE, INTERVAL 67 DAY)),
+    (6,  9,  DATE_SUB(CURRENT_DATE, INTERVAL 40 DAY)),
+    (6,  10, DATE_SUB(CURRENT_DATE, INTERVAL 38 DAY)),
+    (7,  17, DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY)),
+    (7,  18, DATE_SUB(CURRENT_DATE, INTERVAL 13 DAY)),
+    (7,  19, DATE_SUB(CURRENT_DATE, INTERVAL 11 DAY)),
+    (8,  17, DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY)),
+    (8,  18, DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)),
+    (8,  19, DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY));
 
 
 -- -------------------------------------------------------------
@@ -245,28 +291,33 @@ INSERT INTO suscripcion_revista (revista_id, usuario_id, fecha_suscripcion) VALU
 -- -------------------------------------------------------------
 
 INSERT INTO interaccion_likes (revista_id, usuario_id, me_gusta, fecha_me_gusta) VALUES
-    (1,  7,  TRUE,  '2025-01-21 10:30:00'),
-    (1,  8,  TRUE,  '2025-01-23 14:00:00'),
-    (1,  10, TRUE,  '2025-02-02 09:15:00'),
-    (3,  8,  TRUE,  '2025-02-19 16:45:00'),
-    (3,  9,  TRUE,  '2025-03-02 12:30:00'),
-    (5,  7,  TRUE,  '2025-02-06 20:00:00'),
-    (5,  10, TRUE,  '2025-02-11 18:30:00'),
+    (1,  7,  TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 79 DAY)),
+    (1,  8,  TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 77 DAY)),
+    (1,  10, TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 67 DAY)),
+    (3,  8,  TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 75 DAY)),
+    (3,  9,  TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 64 DAY)),
+    (5,  7,  TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 71 DAY)),
+    (5,  10, TRUE,  DATE_SUB(CURRENT_DATE, INTERVAL 66 DAY)),
     (6,  9,  FALSE, NULL),
-    (6,  10, FALSE, NULL);
+    (6,  10, FALSE, NULL),
+    (7,  17, TRUE, DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)),
+    (7,  18, TRUE, DATE_SUB(CURRENT_DATE, INTERVAL 12 DAY)),
+    (8,  19, TRUE, DATE_SUB(CURRENT_DATE, INTERVAL 5 DAY));
 
 
 INSERT INTO interaccion_comentarios (revista_id, usuario_id, comentario, fecha_comentario) VALUES
-    (1,  7, 'Excelente contenido, muy actualizado!', '2025-01-21 10:35:00'),
-    (1,  8, 'La mejor revista tech de Guatemala.', '2025-01-23 14:05:00'),
-    (1,  10, 'Muy buen análisis del mercado tecnológico.', '2025-02-02 09:20:00'),
-    (1,  7, 'Esperando la edición de abril con ansias.', '2025-03-20 10:00:00'),
-    (3,  8, 'El artículo sobre cambio climático es muy útil.', '2025-02-19 17:00:00'),
-    (3,  9, 'Me gusta el enfoque divulgativo.', '2025-03-02 12:45:00'),
-    (5,  7, 'Gran cobertura de la liga local!', '2025-02-06 20:15:00'),
-    (5,  10, 'Excelentes estadísticas y análisis.', '2025-02-11 18:45:00'),
-    (6,  9, 'El plan de entrenamiento de 8 semanas es genial.', '2025-04-21 08:00:00'),
-    (6,  10, 'Quisiera más contenido de nutrición.', '2025-04-23 09:30:00');
+    (1,  7, 'Excelente contenido, muy actualizado!', DATE_SUB(CURRENT_DATE, INTERVAL 79 DAY)),
+    (1,  8, 'La mejor revista tech de Guatemala.', DATE_SUB(CURRENT_DATE, INTERVAL 77 DAY)),
+    (1,  10, 'Muy buen análisis del mercado tecnológico.', DATE_SUB(CURRENT_DATE, INTERVAL 67 DAY)),
+    (1,  7, 'Esperando la próxima edición con ansias.', DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY)),
+    (3,  8, 'El artículo sobre cambio climático es muy útil.', DATE_SUB(CURRENT_DATE, INTERVAL 75 DAY)),
+    (3,  9, 'Me gusta el enfoque divulgativo.', DATE_SUB(CURRENT_DATE, INTERVAL 64 DAY)),
+    (5,  7, 'Gran cobertura de la liga local!', DATE_SUB(CURRENT_DATE, INTERVAL 71 DAY)),
+    (5,  10, 'Excelentes estadísticas y análisis.', DATE_SUB(CURRENT_DATE, INTERVAL 66 DAY)),
+    (6,  9, 'El plan de entrenamiento de 8 semanas es genial.', DATE_SUB(CURRENT_DATE, INTERVAL 39 DAY)),
+    (6,  10, 'Quisiera más contenido de nutrición.', DATE_SUB(CURRENT_DATE, INTERVAL 37 DAY)),
+    (7,  17, 'Me gustó el enfoque práctico para docentes.', DATE_SUB(CURRENT_DATE, INTERVAL 14 DAY)),
+    (8,  18, 'Excelente análisis para pequeños negocios.', DATE_SUB(CURRENT_DATE, INTERVAL 5 DAY));
 
 
 -- -------------------------------------------------------------
@@ -274,14 +325,17 @@ INSERT INTO interaccion_comentarios (revista_id, usuario_id, comentario, fecha_c
 -- -------------------------------------------------------------
 
 INSERT INTO pago_revista (revista_id, pago, fecha_pago) VALUES
-    (1,  240, '2025-02-01 00:00:00'),
-    (1,  224, '2025-03-01 00:00:00'),
-    (1,  248, '2025-04-01 00:00:00'),
-    (3,  196, '2025-03-01 00:00:00'),
-    (3,  210, '2025-04-01 00:00:00'),
-    (5,  279, '2025-02-01 00:00:00'),
-    (5,  248, '2025-03-01 00:00:00'),
-    (6,  195, '2025-05-01 00:00:00');
+    (1,  240, DATE_SUB(CURRENT_DATE, INTERVAL 60 DAY)),
+    (1,  224, DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)),
+    (1,  248, DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY)),
+    (3,  196, DATE_SUB(CURRENT_DATE, INTERVAL 58 DAY)),
+    (3,  210, DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY)),
+    (5,  279, DATE_SUB(CURRENT_DATE, INTERVAL 57 DAY)),
+    (5,  248, DATE_SUB(CURRENT_DATE, INTERVAL 27 DAY)),
+    (6,  195, DATE_SUB(CURRENT_DATE, INTERVAL 5 DAY)),
+    (7,  126, DATE_SUB(CURRENT_DATE, INTERVAL 12 DAY)),
+    (7,  133, DATE_SUB(CURRENT_DATE, INTERVAL 4 DAY)),
+    (8,  128, DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY));
 
 
 -- -------------------------------------------------------------
@@ -301,21 +355,26 @@ INSERT INTO costo_sugerido (costo, dias) VALUES
 
 INSERT INTO anuncio (usuario_id, tipo_anuncio_id, estado_anuncio_id, costo_total, fecha_creacion, fecha_vencimiento) VALUES
     -- Anunciante 12
-    (12, 1, 1,  25, '2026-02-01 08:00:00', '2026-02-08 08:00:00'),
-    (12, 2, 1,  50, '2026-02-01 08:00:00', '2026-02-15 08:00:00'),
-    (12, 3, 2,  85, '2026-01-01 08:00:00', '2026-01-08 08:00:00'),
+    (12, 1, 1,  25, DATE_SUB(CURRENT_DATE, INTERVAL 35 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY)),
+    (12, 2, 1,  50, DATE_SUB(CURRENT_DATE, INTERVAL 34 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY)),
+    (12, 3, 2,  85, DATE_SUB(CURRENT_DATE, INTERVAL 60 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 53 DAY)),
 
     -- Anunciante 13
-    (13, 1, 1,  50, '2026-02-05 10:00:00', '2026-02-12 10:00:00'),
-    (13, 1, 2,  10, '2026-01-15 10:00:00', '2026-01-16 10:00:00'),
+    (13, 1, 1,  50, DATE_SUB(CURRENT_DATE, INTERVAL 32 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 25 DAY)),
+    (13, 1, 2,  10, DATE_SUB(CURRENT_DATE, INTERVAL 50 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 49 DAY)),
 
     -- Anunciante 14
-    (14, 3, 1,  85, '2026-02-10 09:00:00', '2026-02-17 09:00:00'),
-    (14, 2, 1,  50, '2026-02-10 09:00:00', '2026-02-24 09:00:00'),
+    (14, 3, 1,  85, DATE_SUB(CURRENT_DATE, INTERVAL 29 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 22 DAY)),
+    (14, 2, 1,  50, DATE_SUB(CURRENT_DATE, INTERVAL 29 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY)),
 
     -- Anunciante 15
-    (15, 1, 2,  10, '2026-01-20 09:00:00', '2026-01-21 09:00:00'),
-    (15, 1, 2,  50, '2026-01-20 09:00:00', '2026-01-27 09:00:00');
+    (15, 1, 2,  10, DATE_SUB(CURRENT_DATE, INTERVAL 45 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 44 DAY)),
+    (15, 1, 2,  50, DATE_SUB(CURRENT_DATE, INTERVAL 45 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 38 DAY)),
+
+    -- Anunciante 20
+    (20, 1, 1,  50, DATE_SUB(CURRENT_DATE, INTERVAL 12 DAY), DATE_ADD(CURRENT_DATE, INTERVAL 2 DAY)),
+    (20, 2, 1,  85, DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), DATE_ADD(CURRENT_DATE, INTERVAL 4 DAY)),
+    (20, 3, 2,  25, DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 13 DAY));
 
 
 -- -------------------------------------------------------------
@@ -333,7 +392,11 @@ INSERT INTO contenido_extra (anuncio_id, recurso) VALUES
     (7, 'https://pswscience.org/wp-content/uploads/2023/01/PSW-2472-Hansen-danta...fares-glonal-conservation.png'),
     (7, 'ggggggggggggggggggg gggggg ggggg ggg ggg gggggggggggggg'),
     (8, 'https://tse2.mm.bing.net/th/id/OIP.x4Ft--VqGT1IMxQrkO7GZgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3'),
-    (9, 'https://i.pinimg.com/736x/6f/26/84/6f2684269e84bae8a477cf6e16cf266d.jpg');
+    (9, 'https://i.pinimg.com/736x/6f/26/84/6f2684269e84bae8a477cf6e16cf266d.jpg'),
+    (10, 'https://images.pexels.com/photos/4145153/pexels-photo-4145153.jpeg'),
+    (11, 'https://images.pexels.com/photos/4144224/pexels-photo-4144224.jpeg'),
+    (11, 'Promocion de cursos intensivos para certificaciones tecnicas.'),
+    (12, 'https://youtu.be/aqz-KE-bpKQ?si=Kc2Zy4tImkE0k7hD');
 
 
 
@@ -342,11 +405,14 @@ INSERT INTO contenido_extra (anuncio_id, recurso) VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO bloqueo_anuncio (revista_id, anuncio_id, estado_bloqueo_anuncio_id, pago, fecha_inicio_bloqueo, fecha_fin_bloqueo) VALUES
-    (1, 1, 1, 35, '2026-02-01 00:00:00', '2026-02-08 00:00:00'),
-    (1, 2, 1, 40, '2026-02-01 00:00:00', '2026-02-15 00:00:00'),
-    (3, 3, 2, 13, '2026-01-10 00:00:00', '2026-01-13 00:00:00'),
-    (5, 4, 1, 18, '2026-02-05 00:00:00', '2026-02-12 00:00:00'),
-    (6, 7, 2, 17, '2026-01-15 00:00:00', '2026-01-22 00:00:00');
+    (1, 1, 1, 35, DATE_SUB(CURRENT_DATE, INTERVAL 35 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY)),
+    (1, 2, 1, 40, DATE_SUB(CURRENT_DATE, INTERVAL 34 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY)),
+    (3, 3, 2, 13, DATE_SUB(CURRENT_DATE, INTERVAL 58 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 55 DAY)),
+    (5, 4, 1, 18, DATE_SUB(CURRENT_DATE, INTERVAL 31 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 24 DAY)),
+    (6, 7, 2, 17, DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 21 DAY)),
+    (7, 10, 1, 28, DATE_SUB(CURRENT_DATE, INTERVAL 11 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)),
+    (8, 11, 1, 32, DATE_SUB(CURRENT_DATE, INTERVAL 9 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)),
+    (8, 12, 2, 14, DATE_SUB(CURRENT_DATE, INTERVAL 19 DAY), DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY));
 
 
 -- -------------------------------------------------------------
@@ -354,13 +420,17 @@ INSERT INTO bloqueo_anuncio (revista_id, anuncio_id, estado_bloqueo_anuncio_id, 
 -- -------------------------------------------------------------
 
 INSERT INTO registro_anuncio (anuncio_id, url, cantidad_vistas, fecha_vista) VALUES
-    (1, 'https://revistas.gt/revista/tech-monthly',      150, '2026-02-01 12:00:00'),
-    (1, 'https://revistas.gt/revista/gadget-world',       87, '2026-02-02 15:00:00'),
-    (2, 'https://revistas.gt/revista/tech-monthly',      210, '2026-02-01 12:00:00'),
-    (2, 'https://revistas.gt/revista/deporte-total',      95, '2026-02-03 18:00:00'),
-    (4, 'https://revistas.gt/revista/science-today',     130, '2026-02-05 11:00:00'),
-    (4, 'https://revistas.gt/revista/fitness-pro',        68, '2026-02-06 14:00:00'),
-    (6, 'https://revistas.gt/revista/tech-monthly',      200, '2026-02-10 09:30:00'),
-    (7, 'https://revistas.gt/revista/deporte-total',     140, '2026-02-10 09:30:00'),
-    (7, 'https://revistas.gt/revista/fitness-pro',        85, '2026-02-11 10:00:00'),
-    (8, 'https://revistas.gt/revista/tech-monthly',       78, '2026-01-20 09:00:00');
+    (1, 'https://revistas.gt/revista/tech-monthly',      150, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 35 DAY), INTERVAL 12 HOUR)),
+    (1, 'https://revistas.gt/revista/gadget-world',       87, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 34 DAY), INTERVAL 15 HOUR)),
+    (2, 'https://revistas.gt/revista/tech-monthly',      210, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 33 DAY), INTERVAL 12 HOUR)),
+    (2, 'https://revistas.gt/revista/deporte-total',      95, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 31 DAY), INTERVAL 18 HOUR)),
+    (4, 'https://revistas.gt/revista/science-today',     130, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY), INTERVAL 11 HOUR)),
+    (4, 'https://revistas.gt/revista/fitness-pro',        68, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 29 DAY), INTERVAL 14 HOUR)),
+    (6, 'https://revistas.gt/revista/tech-monthly',      200, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY), INTERVAL 9 HOUR)),
+    (7, 'https://revistas.gt/revista/deporte-total',     140, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 28 DAY), INTERVAL 10 HOUR)),
+    (7, 'https://revistas.gt/revista/fitness-pro',        85, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 27 DAY), INTERVAL 10 HOUR)),
+    (8, 'https://revistas.gt/revista/tech-monthly',       78, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 44 DAY), INTERVAL 9 HOUR)),
+    (10, 'https://revistas.gt/revista/educa-futuro',     165, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY), INTERVAL 8 HOUR)),
+    (11, 'https://revistas.gt/revista/mercado-creativo', 185, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 8 DAY), INTERVAL 13 HOUR)),
+    (11, 'https://revistas.gt/revista/tech-monthly',      92, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY), INTERVAL 16 HOUR)),
+    (12, 'https://revistas.gt/revista/mercado-creativo',  74, DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 18 DAY), INTERVAL 10 HOUR));

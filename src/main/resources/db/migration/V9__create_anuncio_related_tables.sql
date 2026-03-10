@@ -11,8 +11,8 @@ CREATE TABLE bloqueo_anuncio (
     anuncio_id INT NOT NULL ,
     estado_bloqueo_anuncio_id INT NOT NULL,
     pago INT NOT NULL,
-    fecha_inicio_bloqueo DATETIME NOT NULL,
-    fecha_fin_bloqueo DATETIME NOT NULL,
+    fecha_inicio_bloqueo DATE NOT NULL,
+    fecha_fin_bloqueo DATE NOT NULL,
     FOREIGN KEY (revista_id) REFERENCES revista(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (anuncio_id) REFERENCES anuncio(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (estado_bloqueo_anuncio_id) REFERENCES estado_bloqueo_anuncio(id) ON DELETE RESTRICT ON UPDATE CASCADE

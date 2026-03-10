@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 import revista_backend.models.cost.SuggestedCost;
-import revista_backend.models.types.CostType;
 
 @Value
 public class SuggestedCostCreateResquest {
