@@ -20,7 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-// habilita seguridad a nivel de método y las anotaciones JSR-250 (@RolesAllowed, @PermitAll, @DenyAll)
 @EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
@@ -35,12 +34,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Por defecto Spring añade el prefijo "ROLE_" a cualquier valor usado
-     * con @RolesAllowed, hasRole(), etc.  Para poder escribir simplemente
-     * @RolesAllowed("EDITOR") en lugar de "ROLE_EDITOR" quitamos el
-     * prefijo globalmente.
-     */
     @Bean
     public org.springframework.security.config.core.GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new org.springframework.security.config.core.GrantedAuthorityDefaults("");
@@ -57,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://app-revista.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
